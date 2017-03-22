@@ -18,12 +18,14 @@ export const countryStore = {
     current: { 
       id: '',
       value: false,
+      init: false,
     },
   },
   mutations: {
     [ADD_MAP]: (state, payload) => state.map = payload.map,
     [SET_DATA]: (state, payload) => Vue.set(state.data, payload.id, payload.data),
     [SET_CURRENT]: (state, payload) => { 
+      state.current.init = true;
       state.current.id = payload.id;
       state.current.value = payload.value;
     },
@@ -54,6 +56,7 @@ export const countryStore = {
   getters: {
     getMap: state => state.map,
     countries: state => state.data,
+    currentID: state => state.current,
     currentCountry: state => state.data[state.current.id],
     visitedCount: (state, getters) => getters.visited.length ,
     notVisitedCount:  (state, getters) => getters.notVisited.length,

@@ -1,6 +1,5 @@
 <template>
-  <!-- <div id="card-wrapper" v-if="init"> -->
-  <div id="card-wrapper">
+  <div id="card-wrapper" v-if="currentID.init">
   <div class="ui cards">
   <div class="card" v-bind:style="fillColor">
     <div class="content">
@@ -22,6 +21,7 @@ export default {
   name: 'CountryCard',
   computed: {
     currentCountry() { return this.$store.getters.currentCountry },
+    currentID() { return this.$store.getters.currentID }, 
     flag() {
       if (this.currentCountry.id) {
         return require(`../assets/flags/4x3/${this.currentCountry.id}.svg`);

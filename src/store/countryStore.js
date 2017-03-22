@@ -3,9 +3,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 
-import layerStyle from '../config/layerStyle';
-import geoData from '../config/countriesData.json';
-
 Vue.use(Vuex);
 
 export const SET_DATA = 'SET_DATA';
@@ -18,11 +15,15 @@ export const countryStore = {
   state: {
     data: {},
     map: {},
+    current: {id: ''},
   },
   mutations: {
     [ADD_MAP]: (state, payload) => state.map = payload.map,
     [SET_DATA]: (state, payload) => Vue.set(state.data, payload.id, payload.data),
-    [SET_CURRENT]: (state, payload) => state.currentCountry = payload.current,
+    [SET_CURRENT]: (state, payload) => {
+      console.log('current', payload.id);
+      state.current.id = payload.id;
+    },
     [CHANGE_STATUS]: (state, payload) => {
         const data = state.data[payload.id];
         if (!data.status) {

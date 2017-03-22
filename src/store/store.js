@@ -46,7 +46,7 @@ const createLayer = store => {
                 layer.setStyle({ fillColor: styles.hoverfillColor });
                 store.commit({
                   type: SET_CURRENT,
-                  current: layerData,
+                  id,
                 });
               },
               mouseout: () => {

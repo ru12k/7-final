@@ -54,6 +54,7 @@ export const countryStore = {
   getters: {
     getMap: state => state.map,
     countries: state => state.data,
+    currentCountry: state => state.data[state.current.id],
     visitedCount: (state, getters) => getters.visited.length ,
     notVisitedCount:  (state, getters) => getters.notVisited.length,
     visited: state => {

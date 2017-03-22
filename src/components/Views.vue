@@ -3,6 +3,7 @@
     <v-map></v-map>
     <v-list></v-list>
     <v-visitedlist></v-visitedlist>
+    <v-card></v-card>
   </div>
 </template>
 
@@ -10,6 +11,7 @@
 import Map from './Map';
 import CountryList from './CountryList';
 import VisitedList from './VisitedList';
+import CountryCard from './CountryCard';
 
 export default {
   name: 'views',
@@ -17,6 +19,7 @@ export default {
     'v-map': Map,
     'v-list': CountryList,
     'v-visitedlist': VisitedList,
+    'v-card': CountryCard,
   },
 };
 </script>

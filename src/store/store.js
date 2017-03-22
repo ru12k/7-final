@@ -41,18 +41,20 @@ const createLayer = store => {
             layer.setStyle(styles.style);
             layer.on({
               mouseover: () => {
-                const layerData = state.countryStore.data[id];
                 layer.bringToFront();
-                layer.setStyle({ fillColor: styles.hoverfillColor });
                 store.commit({
                   type: SET_CURRENT,
                   id,
+                  value: true,
                 });
               },
               mouseout: () => {
-                const layerData = state.countryStore.data[id];
-                layer.setStyle({ fillColor: layerData.fillColor });
                 layer.bringToBack();
+                store.commit({
+                  type: SET_CURRENT,
+                  id,
+                  value: false,
+                });
               },
               click: (e) => {
                 store.commit({
@@ -73,10 +75,27 @@ const changeStatus = store => {
   store.subscribe((mutation, state) => {
     if (mutation.type === CHANGE_STATUS) {
       const id = mutation.payload.id;
-      state.countryStore.map.eachLayer((layer) => {
+      state.countryStore.map.eachLayer( layer => {
         if (layer.id === id) {
           const layerData = store.state.countryStore.data[id];
           layer.setStyle({ fillColor: layerData.fillColor});
+        }
+      });
+    }
+  })
+};
+
+const setCurrent = store => {
+  store.subscribe((mutation, state) => {
+    if (mutation.type === SET_CURRENT) {
+      const id = mutation.payload.id;
+      state.countryStore.map.eachLayer( layer => {
+        if (layer.id === id) {
+          if (mutation.payload.value) layer.setStyle({ fillColor: layerStyle().hoverfillColor});
+          else {
+            const layerData = store.state.countryStore.data[id];
+            layer.setStyle({ fillColor: layerData.fillColor});
+          }
         }
       });
     }
@@ -87,7 +106,7 @@ const store = new Vuex.Store({
   modules: {
     countryStore,
   },
-  plugins: [initData, createLayer, changeStatus],
+  plugins: [initData, createLayer, changeStatus, setCurrent],
 });
 
 export default store;

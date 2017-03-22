@@ -2,18 +2,21 @@
   <div class="views">
     <v-map></v-map>
     <v-list></v-list>
+    <v-visitedlist></v-visitedlist>
   </div>
 </template>
 
 <script>
 import Map from './Map';
 import CountryList from './CountryList';
+import VisitedList from './VisitedList';
 
 export default {
   name: 'views',
   components: {
     'v-map': Map,
     'v-list': CountryList,
+    'v-visitedlist': VisitedList,
   },
 };
 </script>

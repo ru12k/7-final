@@ -24,7 +24,6 @@ export const countryStore = {
     [ADD_MAP]: (state, payload) => state.map = payload.map,
     [SET_DATA]: (state, payload) => Vue.set(state.data, payload.id, payload.data),
     [SET_CURRENT]: (state, payload) => { 
-      // console.log('current:', payload.id, payload.value);
       state.current.id = payload.id;
       state.current.value = payload.value;
     },
@@ -53,16 +52,19 @@ export const countryStore = {
     }, 
   },
   getters: {
-    getMap: state => state.countryStore.map,
+    getMap: state => state.map,
+    countries: state => state.data,
     visitedCount: (state, getters) => getters.visited.length ,
     notVisitedCount:  (state, getters) => getters.notVisited.length,
     visited: state => {
-      const keys = Object.keys(state.countryStore.data);
-      return keys.filter( id => state.countryStore.data[id].status);
+      const keys = Object.keys(state.data);
+      const visitedID = keys.filter( id => state.data[id].status);
+      return visitedID.map( id => state.data[id]);
     },
-    notVisited: state => {
-      const keys = Object.keys(state.countryStore.data);
-      return keys.filter( id => !state.countryStore.data[id].status);
+    notVisitedID: state => {
+      const keys = Object.keys(state.data);
+      const notVisitedID = keys.filter( id => !state.data[id].status);
+      return notVisitedID.map( id => state.data[id]);
     },
   }
 }

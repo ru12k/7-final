@@ -36,11 +36,9 @@ const createLayer = store => {
          if (data.cca2 === id) {
             const layer = L.geoJSON();
             const styles = layerStyle(mutation.payload.data.fillColor);
-            layer.id = id;
-            layer.addData(data.geojson);
-            layer.setStyle(styles.style);
             layer.on({
               mouseover: () => {
+                console.log('mouseover', id);
                 layer.bringToFront();
                 store.commit({
                   type: SET_CURRENT,
@@ -49,6 +47,7 @@ const createLayer = store => {
                 });
               },
               mouseout: () => {
+                console.log('mouseout', id);
                 layer.bringToBack();
                 store.commit({
                   type: SET_CURRENT,
@@ -57,6 +56,7 @@ const createLayer = store => {
                 });
               },
               click: (e) => {
+                console.log('click', e.target, id);
                 store.commit({
                   type: CHANGE_STATUS,
                   id,
@@ -64,6 +64,9 @@ const createLayer = store => {
                 });
               }
             });
+            layer.id = id;
+            layer.addData(data.geojson);
+            layer.setStyle(styles.style);
             layer.addTo(store.state.countryStore.map);
           }
       });
@@ -77,6 +80,7 @@ const changeStatus = store => {
       const id = mutation.payload.id;
       state.countryStore.map.eachLayer( layer => {
         if (layer.id === id) {
+          console.log('changeStatus: ', id);
           const layerData = store.state.countryStore.data[id];
           layer.setStyle({ fillColor: layerData.fillColor});
         }
@@ -89,7 +93,6 @@ const setCurrent = store => {
   store.subscribe((mutation, state) => {
     if (mutation.type === SET_CURRENT) {
       const id = mutation.payload.id;
-      console.log('current', id, mutation.payload.value);
       state.countryStore.map.eachLayer( layer => {
         if (layer.id === id) {
           if (mutation.payload.value) layer.setStyle({ fillColor: layerStyle().hoverfillColor});

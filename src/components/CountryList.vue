@@ -26,7 +26,10 @@ export default {
     'v-country': Country,
   },
   computed: {
-    countries() { return this.$store.state.countryStore.data },
+    countries() { 
+      return this.$store.state.countryStore.data
+      // return this.$store.getters.countries;
+      },
   },
 }
 </script>

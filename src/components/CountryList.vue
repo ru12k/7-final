@@ -23,13 +23,11 @@ import Country from './CountryItem';
 export default {
   name: 'CountryList',
   components: {
-    'v-contry': Country
+    'v-country': Country,
   },
-  vuex: {
-    getters: {
-      countries,
-    }
-  }
+  computed: {
+    countries() { return this.$store.state.countryStore.data },
+  },
 }
 </script>
 

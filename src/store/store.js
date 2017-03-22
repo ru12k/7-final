@@ -89,6 +89,7 @@ const setCurrent = store => {
   store.subscribe((mutation, state) => {
     if (mutation.type === SET_CURRENT) {
       const id = mutation.payload.id;
+      console.log('current', id, mutation.payload.value);
       state.countryStore.map.eachLayer( layer => {
         if (layer.id === id) {
           if (mutation.payload.value) layer.setStyle({ fillColor: layerStyle().hoverfillColor});

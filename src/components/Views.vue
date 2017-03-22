@@ -1,16 +1,19 @@
 <template>
   <div class="views">
     <v-map></v-map>
+    <v-list></v-list>
   </div>
 </template>
 
 <script>
 import Map from './Map';
+import CountryList from './CountryList';
 
 export default {
   name: 'views',
   components: {
     'v-map': Map,
+    'v-list': CountryList,
   },
 };
 </script>

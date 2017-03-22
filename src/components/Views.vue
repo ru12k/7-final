@@ -4,6 +4,11 @@
     <v-list></v-list>
     <v-visitedlist></v-visitedlist>
     <v-card></v-card>
+    <v-menu 
+      :Login="login" 
+      :Logout="logout" 
+      :Authenticated="authenticated">
+    </v-menu>
   </div>
 </template>
 
@@ -12,6 +17,7 @@ import Map from './Map';
 import CountryList from './CountryList';
 import VisitedList from './VisitedList';
 import CountryCard from './CountryCard';
+import Menu from './Menu';
 
 export default {
   name: 'views',
@@ -20,6 +26,7 @@ export default {
     'v-list': CountryList,
     'v-visitedlist': VisitedList,
     'v-card': CountryCard,
+    'v-menu': Menu,
   },
 };
 </script>

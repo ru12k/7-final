@@ -1,18 +1,15 @@
 <template>
   <div class="wrapper">
     <h5 class="custom-header"><i class="world icon"></i><span>All countries:</span></h5>
-      <div class="table-wrapper">
-      <table class="ui celled striped table custom-table">
-        <tbody>
-          <v-country id="country" v-for="country in countries" 
-            :name="country.commonName" 
-            :status="country.status" 
-            :id="country.id" 
-            :fillColor="country.fillColor">
-          </v-country>
-        </tbody>
-      </table>
-    </div> 
+    <div class="list-wrapper">
+      <v-country id="country" 
+        v-for="country in countries" 
+        :name="country.commonName" 
+        :status="country.status" 
+        :id="country.id" 
+        :fillColor="country.fillColor">
+      </v-country>
+    </div>
   </div>
 </template>
 
@@ -26,10 +23,7 @@ export default {
     'v-country': Country,
   },
   computed: {
-    countries() { 
-      return this.$store.state.countryStore.data
-      // return this.$store.getters.countries;
-      },
+    countries() { return this.$store.getters.countries },
   },
 }
 </script>
@@ -46,31 +40,16 @@ export default {
     border-radius: 5px;
     background-color: rgba(230, 230, 230, 0.7);
   }
-  .table-wrapper {
+  .list-wrapper {
     overflow: auto;
     width: 360px;
     height: 750px;
-  }
-  .table-wrapper .custom-table {
-    width: 100%;
-    height: 100%;
-    background-color: rgba(230, 230, 230, 0.7);
-  }
-  #country:hover {
-    cursor: pointer;
-    color: salmon;
   }
   .custom-header {
     background-color: #2185D0;
     color: #fff;
     margin: auto;
     text-align: center;
-  }
-  .list-wrapper {
-    overflow: auto;
-    width: 360px;
-    height: 750px;
-    padding: 5px;
   }
 </style>
 

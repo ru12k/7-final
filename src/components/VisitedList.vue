@@ -21,7 +21,7 @@ export default {
         return false;
       },
       isVisited() {  return this.$store.getters.visited },
-    }
+    },
   }
 </script>
 

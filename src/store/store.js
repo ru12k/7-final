@@ -38,7 +38,6 @@ const createLayer = store => {
             const styles = layerStyle(mutation.payload.data.fillColor);
             layer.on({
               mouseover: () => {
-                console.log('mouseover', id);
                 layer.bringToFront();
                 store.commit({
                   type: SET_CURRENT,
@@ -47,7 +46,6 @@ const createLayer = store => {
                 });
               },
               mouseout: () => {
-                console.log('mouseout', id);
                 layer.bringToBack();
                 store.commit({
                   type: SET_CURRENT,
@@ -56,7 +54,6 @@ const createLayer = store => {
                 });
               },
               click: (e) => {
-                console.log('click', e.target, id);
                 store.commit({
                   type: CHANGE_STATUS,
                   id,
@@ -78,13 +75,8 @@ const changeStatus = store => {
   store.subscribe((mutation, state) => {
     if (mutation.type === CHANGE_STATUS) {
       const id = mutation.payload.id;
-      state.countryStore.map.eachLayer( layer => {
-        if (layer.id === id) {
-          console.log('changeStatus: ', id);
-          const layerData = store.state.countryStore.data[id];
-          layer.setStyle({ fillColor: layerData.fillColor});
-        }
-      });
+      const fillColor = store.getters.getCountry(id).fillColor;
+      store.getters.getLayer(id).setStyle({ fillColor: fillColor });
     }
   })
 };
@@ -93,15 +85,12 @@ const setCurrent = store => {
   store.subscribe((mutation, state) => {
     if (mutation.type === SET_CURRENT) {
       const id = mutation.payload.id;
-      state.countryStore.map.eachLayer( layer => {
-        if (layer.id === id) {
-          if (mutation.payload.value) layer.setStyle({ fillColor: layerStyle().hoverfillColor});
-          else {
-            const layerData = store.state.countryStore.data[id];
-            layer.setStyle({ fillColor: layerData.fillColor});
-          }
-        }
-      });
+      const layer = store.getters.getLayer(id);
+      if (mutation.payload.value) layer.setStyle({ fillColor: layerStyle().hoverfillColor});
+      else {
+        const fillColor = store.getters.getCountry(id).fillColor;
+        layer.setStyle({ fillColor: fillColor});
+      }
     }
   })
 };

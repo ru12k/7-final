@@ -1,7 +1,7 @@
   
 <template>
   <div :class="[{visited: status}]" id="country"
-    v-on:click="changeStatus(id)"
+    v-on:click="changeStatus(id), fitBounds(id)"
     v-on:mouseover="hoverCountry(id)" 
     v-on:mouseout="leaveCountry(id)"
     v-bind:style="dataHoverStyle">
@@ -14,7 +14,7 @@
     <div class="ui checkbox">
       <input type="checkbox" :checked="status" v-on:click="changeStatus(id)">
       <label></label>
-    </div> 
+    </div>
   </div>
 </template>
 
@@ -38,8 +38,14 @@
             return require(`../assets/flags/4x3/${this.id}.svg`);
           }
         },
+        map() { return this.$store.getters.getMap },
+        layer() { return this.$store.getters.getLayer},
       },
     methods: {
+      fitBounds(id) {
+        const center = this.layer(this.id).getBounds().getCenter();
+        this.map.flyTo(center, 5);
+      },
       changeStatus(id) {
         this.$store.commit({
           type: CHANGE_STATUS,
@@ -71,7 +77,7 @@
 
   </script>
     
-  <style>
+  <style scoped>
   #country {
     display: flex;
     flex-wrap: nowrap;

@@ -55,7 +55,19 @@ export const countryStore = {
   },
   getters: {
     getMap: state => state.map,
+    getLayer: (state, getters) => {
+      return id => {
+        let findlayer = {};
+        getters.getMap.eachLayer( layer => {
+          if (layer.id === id) findlayer = layer;
+        });
+        return findlayer;
+      };
+    },
     countries: state => state.data,
+    getCountry: (state, getters) => { 
+      return id => getters.countries[id];
+    },
     currentID: state => state.current,
     currentCountry: state => state.data[state.current.id],
     visitedCount: (state, getters) => getters.visited.length,

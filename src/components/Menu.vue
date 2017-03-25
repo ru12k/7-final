@@ -2,19 +2,14 @@
   <div class="wrapper">
     <div class="ui secondary  menu">
       <a class="item custom-item" style="padding: 0;">
-        <div class="blue ui buttons">
-          <button class="ui button"><i class="world icon"></i>Countries</button>
-          <button class="ui button"><i class="flag icon"></i>Info card</button>
-          <button class="ui button"><i class="bookmark icon"></i>Visited list</button>
+        <div class="ui small primary icon buttons">
+          <button class="ui button"><i class="world icon"></i></button>
+          <button class="ui button"><i class="info circle icon"></i></button>
+          <button class="ui button"><i class="bookmark icon"></i></button>
+          <button class="ui button" v-on:click="onClick()"><i class="undo icon"></i></button>
         </div>
       </a>
       <div class="right menu">
-        <div class="item custom-item">
-          <div class="ui icon input">
-            <input type="text" placeholder="Search...">
-            <i class="search link icon"></i>
-          </div>
-        </div>
         <a class="item" style="padding: 0;">
         <div class="ui buttons">
           <button class="ui positive button" @click="Login()" v-show="!Authenticated">
@@ -33,10 +28,17 @@
 </template>
 
 <script>
+import mapConfig from '../config/mapConfig.js';
 
 export default {
   name: 'menu',
   props: ['Login', 'Logout', 'Authenticated'],
+  computed: {
+    map() { return this.$store.getters.getMap },
+  },
+  methods: {
+    onClick() { this.map.setView(mapConfig.center, mapConfig.zoom) },
+  },
 }
 </script>
 

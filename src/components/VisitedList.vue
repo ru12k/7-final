@@ -29,7 +29,7 @@ export default {
 .wrapper {
   position: absolute;
     right: 0;
-    top: 320px;
+    top: 215px;
     z-index: 2;
     font-size: 12px;
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
@@ -38,7 +38,7 @@ export default {
     
 }
 .visitedblock{
-    width: 290px;
+    width: 300px;
     min-height: 50px;
     max-height: 400px;
     display: flex;
@@ -53,6 +53,7 @@ export default {
     background-color: #2185D0;
     color: #fff;
     margin: auto;
+    margin-bottom: 5px;
     text-align: center;
   }
 </style>

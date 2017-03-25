@@ -1,27 +1,30 @@
 <template>
-  <div id="card-wrapper" v-if="currentID.init">
-  <div class="ui cards">
-  <div class="card" v-bind:style="fillColor">
-    <div class="content">
-      <img class="right floated my-image" :src="flag"/>
-      <div class="header" style="color: white"><i class="flag icon"></i>{{currentCountry.commonName}}</div>
-      <div class="description" style="color: white">{{ descriptionStatus}}</div>
+  <div id="card-wrapper" v-if="currentID.init" v-on:click="fitBounds">
+  <h5 class="custom-header"><i class="info circle icon"></i><span>Selected countries:</span></h5>
+  <div class="custom-content" v-bind:style="fillColor">
+    <div class="custom-text">
+      <h4 class="header" style="color: white" >{{currentCountry.commonName}}</h4>
+      <div>{{ descriptionStatus}}</div>
     </div>
-    <div class="ui bottom attached button" v-on:click="changeStatus"><i class="add icon"></i> {{buttonText}} </div>
+    <div class="custom-flag">
+      <img :src="flag"/>
+    </div>
   </div>
-</div>
+  <div class="ui bottom attached button" v-on:click="changeStatus"><i class="add icon"></i> {{buttonText}} </div>
 </div>
 </template>
 
 <script>
-import { SET_STATE } from '../store/countryStore.js';
+import { SET_STATE,  CHANGE_STATUS } from '../store/countryStore.js';
 import layerStyle from '../config/layerStyle';
 
 export default {
   name: 'CountryCard',
   computed: {
     currentCountry() { return this.$store.getters.currentCountry },
-    currentID() { return this.$store.getters.currentID }, 
+    currentID() { return this.$store.getters.currentID },
+    map() { return this.$store.getters.getMap },
+    layer() { return this.$store.getters.getLayer},
     flag() {
       if (this.currentCountry.id) {
         return require(`../assets/flags/4x3/${this.currentCountry.id}.svg`);
@@ -31,8 +34,8 @@ export default {
       return { 'background-color': this.currentCountry.fillColor };
     },
     descriptionStatus() {
-      if (this.currentCountry.status) return `${this.currentCountry.commonName} alredy visited`;
-      return `${this.currentCountry.commonName} is not yet visited`;
+      if (this.currentCountry.status) return `alredy visited`;
+      return `not yet visited`;
     },
     buttonText() {
       if (this.currentCountry.status) return 'Remove from visited list';
@@ -47,19 +50,67 @@ export default {
         fillColor: layerStyle().visitedfillColor,
       })
     },
+    fitBounds() {
+      const self = this;
+      const center = this.layer(self.currentCountry.id).getBounds().getCenter();
+      this.map.flyTo(center, 5);
+    },
   }
 }
   
 </script>
 
-<style>
+<style scoped>
 #card-wrapper {
     position: absolute;
     right: 0;
-    top: 100px;
+    top: 50px;
     z-index: 2;
+    color: white;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    border-radius: 5px;
   }
-  .content img.my-image {
-    width: 80px;
+ 
+  .custom-header {
+    background-color: #2185D0;
+    color: #fff;
+    margin: auto;
+    text-align: center;
   }
+  .custom-content {
+    height: 100px;
+    width: 300px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: top;
+    cursor: pointer;
+  }
+  .custom-text {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .custom-text h4{
+    padding: 15px 0 0 15px;
+    margin: 0;
+
+  }
+.custom-text div{
+    padding: 0 0 0 15px;
+    font-size: 12px;
+    line-height: 12px;
+
+    margin: 0;
+  }
+  .custom-flag {
+    padding: 15px 15px 0 0;
+    margin: 0;
+    
+  }
+  .custom-flag img {
+    width: 70px;
+  }
+
+
 </style>

@@ -1,10 +1,13 @@
 <template>
-  <div id="visitedItem-wrapper" 
+  <div id="visitedItem-wrapper"
       v-on:click="changeStatus(id)" 
       v-on:mouseover="hoverCountry(id)"
       v-on:mouseout="leaveCountry(id)">
-      <div><img class="visited-flag" :src="flag"></div>
-      <div class="visited-name">{{name}}</div>
+      <a class="ui blue image label">
+        <img :src="flag">
+        {{name}}
+        <i class="delete icon"></i>
+      </a>
   </div>
 </template>
 
@@ -58,6 +61,13 @@ export default {
 
 <style>
 #visitedItem-wrapper {
+  margin: 5px;
+  cursor: pointer;
+}
+/*
+
+
+#visitedItem-wrapper {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -76,4 +86,5 @@ export default {
   font-size: 12px;
   color: orangered;
 }
+*/
 </style>

@@ -10,13 +10,13 @@ let self = null;
 export default {
   name: 'map',
   data() {
-    self = this;
     return {
       map: false,
     }
   },
   methods: {
     initMap() {
+      let self = this;
       this.map = L.map('map-container', {
           zoomControl: false,
         }).setView(mapConfig.center, mapConfig.zoom);

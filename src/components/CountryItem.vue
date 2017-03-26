@@ -10,11 +10,11 @@
     <div class="custom-name" v-on:click="changeStatus(id), fitBounds(id)">
       <h5 v-bind:style="dataHoverStyle" style="font-size: 12px">{{name}}</h5>
     </div>
-    <div class="ui checkbox" v-on:click="changeStatus(id), fitBounds(id)">
-      <input type="checkbox" :checked="status" v-on:click="changeStatus(id)">
+    <div class="ui checkbox">
+      <input type="checkbox" :checked="status" v-on:click="changeStatus(id), fitBounds(id)">
       <label></label>
     </div>
-    <div class="ui mini primary icon buttons"  v-on:click="fitBounds(id)">
+    <div class="ui mini primary icon buttons"  style="margin-right: 5px" v-on:click="fitBounds(id)">
       <button class="ui button"><i class="world icon"></i></button>
     </div>
   </div>
@@ -46,7 +46,7 @@
     methods: {
       fitBounds(id) {
         const center = this.layer(this.id).getBounds().getCenter();
-        this.map.flyTo(center, 5);
+        this.map.flyTo(center, 4);
       },
       changeStatus(id) {
         this.$store.commit({
@@ -94,7 +94,7 @@
   }
   .custom-flag {
     width: 40px;
-    padding: 5px 5px 5px 10px;
+    padding: 5px 5px 5px 5px;
   }
   .custom-flag img {
     width: 30px;
@@ -103,12 +103,8 @@
     background-color: rgba(255,69,0,0.7);
     color: white;
   }
-  .custom-buttons {
-    width: 20px;
-    height: 20px;
+  div.custom-button {
     margin: 5px;
-    background-color: #2185D0;
-    cursor: pointer;
   }
   </style>
   

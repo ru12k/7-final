@@ -53,7 +53,7 @@ export default {
     fitBounds() {
       const self = this;
       const center = this.layer(self.currentCountry.id).getBounds().getCenter();
-      this.map.flyTo(center, 5);
+      this.map.flyTo(center, 4);
     },
   }
 }

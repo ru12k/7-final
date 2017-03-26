@@ -35,6 +35,7 @@ export default {
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
     border-radius: 5px;
     background-color: rgba(230, 230, 230, 0.7);
+    padding-bottom: 5px;
     
 }
 .visitedblock{

@@ -3,7 +3,7 @@
     <div class="ui secondary  menu">
       <a class="item custom-item" style="padding: 0;">
         <div class="ui small primary icon buttons">
-          <button class="ui button"><i class="world icon"></i></button>
+          <button class="ui button"><i class="flag icon"></i></button>
           <button class="ui button"><i class="info circle icon"></i></button>
           <button class="ui button"><i class="bookmark icon"></i></button>
           <button class="ui button" v-on:click="onClick()"><i class="undo icon"></i></button>

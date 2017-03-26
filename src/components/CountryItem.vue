@@ -1,19 +1,21 @@
   
 <template>
   <div :class="[{visited: status}]" id="country"
-    v-on:click="changeStatus(id), fitBounds(id)"
     v-on:mouseover="hoverCountry(id)" 
     v-on:mouseout="leaveCountry(id)"
     v-bind:style="dataHoverStyle">
     <div class="custom-flag">
       <img :src="flag">
     </div>
-    <div class="custom-name">
-      <h5 v-bind:style="dataHoverStyle" style="font-size: 13px">{{name}}</h5>
+    <div class="custom-name" v-on:click="changeStatus(id), fitBounds(id)">
+      <h5 v-bind:style="dataHoverStyle" style="font-size: 12px">{{name}}</h5>
     </div>
-    <div class="ui checkbox">
+    <div class="ui checkbox" v-on:click="changeStatus(id), fitBounds(id)">
       <input type="checkbox" :checked="status" v-on:click="changeStatus(id)">
       <label></label>
+    </div>
+    <div class="ui mini primary icon buttons"  v-on:click="fitBounds(id)">
+      <button class="ui button"><i class="world icon"></i></button>
     </div>
   </div>
 </template>
@@ -84,11 +86,11 @@
     height: 40px;
     justify-content: space-between;
     align-items: center;
-    cursor: pointer;
   }
   .custom-name {
     flex-grow: 1;
     padding: 5px;
+    cursor: pointer;
   }
   .custom-flag {
     width: 40px;
@@ -100,6 +102,13 @@
   #country.visited {
     background-color: rgba(255,69,0,0.7);
     color: white;
+  }
+  .custom-buttons {
+    width: 20px;
+    height: 20px;
+    margin: 5px;
+    background-color: #2185D0;
+    cursor: pointer;
   }
   </style>
   

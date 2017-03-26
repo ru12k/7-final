@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <h5 class="custom-header"><i class="world icon"></i><span>All countries:</span></h5>
+    <h5 class="custom-header"><i class="flag icon"></i><span>All countries:</span></h5>
     <div class="list-tool">
       <div class="ui small primary icon buttons">
         <button class="ui button"><i class="list layout icon"></i></button>
@@ -41,7 +41,7 @@ export default {
 
 <style scoped>
   .wrapper {
-    width: 350px;
+    width: 300px;
     position: absolute;
     left: 0;
     top: 50px;
@@ -53,8 +53,8 @@ export default {
   }
   .list-wrapper {
     overflow: auto;
-    width: 350px;
-    height: 750px;
+    width: 300px;
+    height: 500px;
   }
   .custom-header {
     background-color: #2185D0;
@@ -69,7 +69,7 @@ export default {
     margin-right: 5px;
   }
   .custom-tool input[type="text"] {
-    width: 250px;
+    width: 200px;
 }
 </style>
 

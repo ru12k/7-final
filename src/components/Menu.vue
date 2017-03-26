@@ -6,17 +6,20 @@
           <button class="ui button"><i class="flag icon"></i></button>
           <button class="ui button"><i class="info circle icon"></i></button>
           <button class="ui button"><i class="bookmark icon"></i></button>
+          <button class="ui button"><i class="comments outline icon"></i></button>
+          <button class="ui button"><i class="zoom icon"></i></button>
+          <button class="ui button"><i class="zoom out icon"></i></button>
           <button class="ui button" v-on:click="onClick()"><i class="undo icon"></i></button>
         </div>
       </a>
       <div class="right menu">
         <a class="item" style="padding: 0;">
         <div class="ui buttons">
-          <button class="ui positive button" @click="Login()" v-show="!Authenticated">
+          <button class="ui positive button" @click="login()" v-show="!authenticated">
             <i class="sign in icon"></i>
             Log-in
            </button>
-           <button class="ui button" @click="Logout()" v-show="Authenticated">
+           <button class="ui button" @click="logout()" v-show="authenticated">
              <i class="sign out icon"></i>
               Log-out
            </button> 
@@ -27,17 +30,33 @@
   </div>
 </template>
 
-<script>
+<script> 
 import mapConfig from '../config/mapConfig.js';
+import { SET_AUTH  } from '../store/countryStore.js';
 
 export default {
   name: 'menu',
   props: ['Login', 'Logout', 'Authenticated'],
   computed: {
     map() { return this.$store.getters.getMap },
+    lock() { return this.$store.getters.lock },
+    authenticated() { return this.$store.getters.authenticated },
+    firebase() { return this.$store.getters.firebase },
   },
   methods: {
     onClick() { this.map.setView(mapConfig.center, mapConfig.zoom) },
+    login() { this.lock.show() },
+    logout() {
+      localStorage.removeItem('id_token');
+      localStorage.removeItem('profile');
+      this.$store.commit({ 
+        type: SET_AUTH,
+        authenticated: false,
+         });
+      this.firebase.auth().signOut().then( 
+        () => console.log("Signout Successful"), 
+        error=> console.log(error));
+    }
   },
 }
 </script>

@@ -4,11 +4,7 @@
     <v-list></v-list>
     <v-visitedlist></v-visitedlist>
     <v-card></v-card>
-    <v-menu 
-      :Login="login" 
-      :Logout="logout" 
-      :Authenticated="authenticated">
-    </v-menu>
+    <v-menu></v-menu>
   </div>
 </template>
 
@@ -27,6 +23,11 @@ export default {
     'v-visitedlist': VisitedList,
     'v-card': CountryCard,
     'v-menu': Menu,
+  },
+  data(){
+    return {
+
+    };
   },
 };
 </script>

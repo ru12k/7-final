@@ -4,6 +4,6 @@ export default {
   attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
   id: 'alexrd.2o2pfnn2',
   maxZoom: 18,
-  zoom: 3,
+  zoom: 2,
   center: [51.505, -0.09]
 }

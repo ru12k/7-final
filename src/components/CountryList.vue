@@ -2,13 +2,13 @@
   <div class="wrapper">
     <h5 class="custom-header"><i class="flag icon"></i><span>All countries:</span></h5>
     <div class="list-tool">
-      <div class="ui small primary icon buttons">
-        <button class="ui button"><i class="list layout icon"></i></button>
-        <button class="ui button"><i class="check circle outline icon"></i></button>
-      </div>
       <div class="ui icon input custom-tool">
         <input type="text" placeholder="Search...">
         <i class="search link icon"></i>
+      </div>
+      <div class="ui small primary icon buttons">
+        <button class="ui button"><i class="list layout icon"></i></button>
+        <button class="ui button"><i class="check circle outline icon"></i></button>
       </div>
     </div>
 

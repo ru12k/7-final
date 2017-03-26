@@ -46,7 +46,7 @@
     methods: {
       fitBounds(id) {
         const center = this.layer(this.id).getBounds().getCenter();
-        this.map.flyTo(center, 4);
+        this.map.flyTo(center, 3);
       },
       changeStatus(id) {
         this.$store.commit({

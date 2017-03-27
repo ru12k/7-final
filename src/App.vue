@@ -26,6 +26,7 @@ export default {
   watch: {
     authenticated: {
       handler: function() {
+        console.log('watch', this.authenticated);
         if (this.authenticated === true) this.firebaseAuth();
         else this.notAuthenticated();
       },

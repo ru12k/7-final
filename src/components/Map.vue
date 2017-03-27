@@ -12,22 +12,22 @@ export default {
   data() {
     return {
       map: false,
-    };
+    }
   },
   methods: {
     initMap() {
       const self = this;
       this.map = L.map('map-container', {
           zoomControl: false,
-        }).setView(mapConfig.center, mapConfig.zoom),
+        }).setView(mapConfig.center, mapConfig.zoom);
       L.tileLayer(mapConfig.url, {
         attribution: mapConfig.attribution,
         id: mapConfig.id,
         maxZoom: mapConfig.maxZoom,
-        }).addTo(self.map);
+      }).addTo(self.map);
       this.$store.commit({
           type: ADD_MAP,
-          map: self.map,
+          map: this.map,
         });
       },
   },

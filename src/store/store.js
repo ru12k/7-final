@@ -11,17 +11,19 @@ import {
   SET_CURRENT,
   CHANGE_STATUS,
   SET_USERID,
+  INIT_DB,
 } from './countryStore';
 import layerStyle from '../config/layerStyle';
+import mapConfig from '../config/mapConfig.js';
 import defaultData from '../config/defaultData.json';
 import geoData from '../config/countriesData.json';
 
 Vue.use(Vuex);
 
-const initData = store => {
-  store.subscribe((mutation, state) => {
-    if (mutation.type === ADD_MAP) {
-      const userId = store.getters.userId;
+const initUser = store => {
+    store.subscribe((mutation, state) => {
+    if (mutation.type === SET_USERID) {
+      const userId = mutation.payload.userId;
       console.log('userId1:', userId);
       store.dispatch({
           type: INIT_DATA,
@@ -31,44 +33,55 @@ const initData = store => {
   })
 };
 
+const addLayers = store => {
+  store.subscribe((mutation, state) => {
+    if (mutation.type === ADD_MAP) {
+      const layers = store.getters.layers;
+      const map = mutation.payload.map;
+      layers.addTo(map);
+    }
+  })
+};
+
 const createLayer = store => {
   store.subscribe((mutation, state) => {
-    if (mutation.type === SET_DATA) {
-      const id = mutation.payload.id;
-      geoData.forEach( data => {
-         if (data.cca2 === id) {
-            const layer = L.geoJSON();
-            const styles = layerStyle(mutation.payload.data.fillColor);
-            layer.on({
-              mouseover: () => {
-                layer.bringToFront();
-                store.commit({
-                  type: SET_CURRENT,
-                  id,
-                  value: true,
-                });
-              },
-              mouseout: () => {
-                layer.bringToBack();
-                store.commit({
-                  type: SET_CURRENT,
-                  id,
-                  value: false,
-                });
-              },
-              click: (e) => {
-                store.commit({
-                  type: CHANGE_STATUS,
-                  id,
-                  fillColor: styles.visitedfillColor
-                });
-              }
+    if (mutation.type === INIT_DB) {
+      console.log('init--db');
+      const db = mutation.payload.data;
+      const layers = store.getters.layers;
+      geoData.forEach( geo => {
+        const layerId = geo.cca2;
+        const layer = L.geoJSON();
+        const styles = layerStyle(db[layerId].fillColor);
+        layer.on({
+          mouseover: () => {
+            // layer.bringToFront();
+            store.commit({
+              type: SET_CURRENT,
+              id: layerId,
+              value: true,
             });
-            layer.id = id;
-            layer.addData(data.geojson);
-            layer.setStyle(styles.style);
-            layer.addTo(store.state.countryStore.map);
+          },
+          mouseout: () => {
+            // layer.bringToBack();
+            store.commit({
+              type: SET_CURRENT,
+              id: layerId,
+              value: false,
+            });
+          },
+          click: (e) => {
+            store.commit({
+              type: CHANGE_STATUS,
+              id: layerId,
+              fillColor: styles.visitedfillColor
+            });
           }
+        });
+        layer.id = layerId;
+        layer.addData(geo.geojson);
+        layer.setStyle(styles.style);
+        layer.addTo(layers);
       });
     }
   })
@@ -102,7 +115,7 @@ const store = new Vuex.Store({
   modules: {
     countryStore,
   },
-  plugins: [initData, createLayer, changeStatus, setCurrent],
+  plugins: [initUser, addLayers, createLayer, changeStatus, setCurrent],
 });
 
 export default store;

@@ -3,6 +3,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import firebase from 'firebase';
+import L from 'leaflet';
 import auth0Config from '../config/auth0Config';
 import fireConfig from '../config/firebaseConfig';
 import defaultData from '../config/defaultData.json';
@@ -16,11 +17,14 @@ export const ADD_MAP = 'ADD_MAP';
 export const INIT_DATA = 'INIT_DATA';
 export const SET_AUTH = 'SET_AUTH';
 export const SET_USERID = 'SET_USERID';
+export const INIT_DB = 'INIT_DB';
+export const RESET_LAYER = 'RESET_LAYER';
 
 export const countryStore = {
   state: {
     data: {},
     map: {},
+    layers: {},
     current: { 
       id: '',
       value: false,
@@ -37,6 +41,8 @@ export const countryStore = {
   },
   mutations: {
     [ADD_MAP]: (state, payload) => state.map = payload.map,
+    [INIT_DB]: (state, payload) => state.data = payload.data,
+    [RESET_LAYER]: (state) => state.layers = L.layerGroup(),
     [SET_DATA]: (state, payload) => Vue.set(state.data, payload.id, payload.data),
     [SET_CURRENT]: (state, payload) => { 
       state.current.init = true;
@@ -61,29 +67,23 @@ export const countryStore = {
       console.log('userId2:', payload.userId);
       const defaultDb = defaultData.users.defaultUser;
       const initDb = data => {
-        const keys = Object.keys(data);
-            keys.forEach( key => {
+            context.commit({ type: RESET_LAYER });
             context.commit({
-              type: SET_DATA,
-              id: key,
-              data: data[key],
+              type: INIT_DB,
+              data,
             });
-          });
-      };
-      console.log('payload.userId:', payload.userId);
-      if (payload.userId != null) {
+       };
+      if (payload.userId === null) initDb(defaultDb);
+      else {
         const userRef = context.state.user.firebase.database().ref('users/' + payload.userId);
         userRef.once('value').then( snapshot => {
-          console.log('snapshot:', data);
           const data = snapshot.val();
+          console.log('snapshot:', data);
           if (data) initDb(data);
           else userRef.set(defaultDb);
         });
-      } else {
-        console.log('defaultDb:', defaultDb);
-        initDb(defaultDb);
       }
-    }, 
+    }
   },
   getters: {
     getMap: state => state.map,
@@ -120,6 +120,7 @@ export const countryStore = {
     userId: state => state.user.userId,
     firebase: state => state.user.firebase,
     secretThing: state => state.user.secretThing,
+    layers: state => state.layers,
   },
   watch: {
     firebase: {

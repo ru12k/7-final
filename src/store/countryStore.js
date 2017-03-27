@@ -5,6 +5,7 @@ import Vuex from 'vuex';
 import firebase from 'firebase';
 import auth0Config from '../config/auth0Config';
 import fireConfig from '../config/firebaseConfig';
+import defaultData from '../config/defaultData.json';
 
 Vue.use(Vuex);
 
@@ -57,15 +58,31 @@ export const countryStore = {
   },
   actions: {
     [INIT_DATA]: (context, payload) => {
-      const db = payload.db;
-      const keys = Object.keys(db);
-      keys.forEach( key => {
-        context.commit({
-          type: SET_DATA,
-          id: key,
-          data: db[key],
+      console.log('userId2:', payload.userId);
+      const defaultDb = defaultData.users.defaultUser;
+      const initDb = data => {
+        const keys = Object.keys(data);
+            keys.forEach( key => {
+            context.commit({
+              type: SET_DATA,
+              id: key,
+              data: data[key],
+            });
+          });
+      };
+      console.log('payload.userId:', payload.userId);
+      if (payload.userId != null) {
+        const userRef = context.state.user.firebase.database().ref('users/' + payload.userId);
+        userRef.once('value').then( snapshot => {
+          console.log('snapshot:', data);
+          const data = snapshot.val();
+          if (data) initDb(data);
+          else userRef.set(defaultDb);
         });
-      });
+      } else {
+        console.log('defaultDb:', defaultDb);
+        initDb(defaultDb);
+      }
     }, 
   },
   getters: {
@@ -110,6 +127,6 @@ export const countryStore = {
         console.log('watch fire:', state.firebase);
       },
       immediate: true,
-    }
+    },
   },
 }

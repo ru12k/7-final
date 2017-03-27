@@ -12,14 +12,14 @@ export default {
   data() {
     return {
       map: false,
-    }
+    };
   },
   methods: {
     initMap() {
-      let self = this;
+      const self = this;
       this.map = L.map('map-container', {
           zoomControl: false,
-        }).setView(mapConfig.center, mapConfig.zoom);
+        }).setView(mapConfig.center, mapConfig.zoom),
       L.tileLayer(mapConfig.url, {
         attribution: mapConfig.attribution,
         id: mapConfig.id,

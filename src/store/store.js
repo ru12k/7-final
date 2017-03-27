@@ -10,6 +10,7 @@ import {
   SET_DATA,
   SET_CURRENT,
   CHANGE_STATUS,
+  SET_USERID,
 } from './countryStore';
 import layerStyle from '../config/layerStyle';
 import defaultData from '../config/defaultData.json';
@@ -20,9 +21,11 @@ Vue.use(Vuex);
 const initData = store => {
   store.subscribe((mutation, state) => {
     if (mutation.type === ADD_MAP) {
+      const userId = store.getters.userId;
+      console.log('userId1:', userId);
       store.dispatch({
           type: INIT_DATA,
-          db: defaultData.users.defaultUser,
+          userId,
       });
     }
   })

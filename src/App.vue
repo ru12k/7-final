@@ -13,7 +13,7 @@ import auth0Config from './config/auth0Config.js';
 import '../node_modules/semantic-ui-css/semantic.min.css';
 import '../node_modules/leaflet/dist/leaflet.css';
 import './main.css';
-import { SET_AUTH, SET_USERID } from './store/countryStore.js';
+import { SET_AUTH, SET_USERID } from './store/userStore.js';
 
 export default {
   name: 'app',

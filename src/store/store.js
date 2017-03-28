@@ -10,9 +10,10 @@ import {
   SET_DATA,
   SET_CURRENT,
   CHANGE_STATUS,
-  SET_USERID,
+  RESET_LAYER,
   INIT_DB,
 } from './countryStore';
+import { userStore, SET_USERID } from './userStore';
 import css from '../config/layerStyle';
 import mapConfig from '../config/mapConfig.js';
 import defaultData from '../config/defaultData.json';
@@ -23,6 +24,7 @@ Vue.use(Vuex);
 const initUser = store => {
     store.subscribe((mutation, state) => {
     if (mutation.type === SET_USERID) {
+      store.commit({ type: RESET_LAYER });
       const userId = mutation.payload.userId;
       console.log('userId1:', userId);
       store.dispatch({
@@ -49,6 +51,7 @@ const createLayer = store => {
       console.log('init--db');
       const db = mutation.payload.data;
       const layers = store.getters.layers;
+      console.log('layers:', layers);
       geoData.forEach( geo => {
         const style = css;
         const layerId = geo.cca2;
@@ -122,6 +125,7 @@ const setCurrent = store => {
 const store = new Vuex.Store({
   modules: {
     countryStore,
+    userStore,
   },
   plugins: [initUser, addLayers, createLayer, changeStatus, setCurrent],
 });

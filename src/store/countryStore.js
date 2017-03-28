@@ -2,10 +2,7 @@
 /*eslint-disable*/
 import Vue from 'vue';
 import Vuex from 'vuex';
-import firebase from 'firebase';
 import L from 'leaflet';
-import auth0Config from '../config/auth0Config';
-import fireConfig from '../config/firebaseConfig';
 import defaultData from '../config/defaultData.json';
 
 Vue.use(Vuex);
@@ -15,8 +12,6 @@ export const SET_CURRENT = 'SET_CURRENT';
 export const CHANGE_STATUS = 'CHANGE_STATUS';
 export const ADD_MAP = 'ADD_MAP';
 export const INIT_DATA = 'INIT_DATA';
-export const SET_AUTH = 'SET_AUTH';
-export const SET_USERID = 'SET_USERID';
 export const INIT_DB = 'INIT_DB';
 export const RESET_LAYER = 'RESET_LAYER';
 
@@ -24,20 +19,12 @@ export const countryStore = {
   state: {
     data: {},
     map: {},
-    layers: {},
+    layers: L.layerGroup(),
     current: { 
       id: '',
       value: false,
       init: false,
     },
-    user: {
-      lock: new Auth0Lock(auth0Config.clientId, auth0Config.domain, auth0Config.optionsLock),
-      auth0: new Auth0({ domain : auth0Config.domain, clientID: auth0Config.clientId}),
-      firebase: firebase.initializeApp(fireConfig, "auth0"),
-      userId: null,
-      authenticated: false,
-      secretThing: '',
-    }
   },
   mutations: {
     [ADD_MAP]: (state, payload) => state.map = payload.map,
@@ -59,15 +46,13 @@ export const countryStore = {
         }
         data.status = !data.status;
     },
-    [SET_AUTH]: (state, payload) => state.user.authenticated = payload.authenticated,
-    [SET_USERID]: (state, payload) => state.user.userId = payload.userId,
   },
   actions: {
     [INIT_DATA]: (context, payload) => {
       console.log('userId2:', payload.userId);
       const defaultDb = defaultData.users.defaultUser;
       const initDb = data => {
-            context.commit({ type: RESET_LAYER });
+            // context.commit({ type: RESET_LAYER });
             context.commit({
               type: INIT_DB,
               data,
@@ -75,7 +60,7 @@ export const countryStore = {
        };
       if (payload.userId === null) initDb(defaultDb);
       else {
-        const userRef = context.state.user.firebase.database().ref('users/' + payload.userId);
+        const userRef = context.getters.firebase.database().ref('users/' + payload.userId);
         userRef.once('value').then( snapshot => {
           const data = snapshot.val();
           console.log('snapshot:', data);
@@ -96,6 +81,7 @@ export const countryStore = {
         return findlayer;
       };
     },
+    layers: state => state.layers,
     countries: state => state.data,
     getCountry: (state, getters) => { 
       return id => getters.countries[id];
@@ -113,21 +99,6 @@ export const countryStore = {
       const keys = Object.keys(state.data);
       const notVisitedID = keys.filter( id => !state.data[id].status);
       return notVisitedID.map( id => state.data[id]);
-    },
-    lock: state => state.user.lock,
-    auth0: state => state.user.auth0,
-    authenticated: state => state.user.authenticated,
-    userId: state => state.user.userId,
-    firebase: state => state.user.firebase,
-    secretThing: state => state.user.secretThing,
-    layers: state => state.layers,
-  },
-  watch: {
-    firebase: {
-       handler: function() {
-        console.log('watch fire:', state.firebase);
-      },
-      immediate: true,
     },
   },
 }

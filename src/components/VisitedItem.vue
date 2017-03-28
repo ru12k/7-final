@@ -12,7 +12,7 @@
 
 <script>
 import { CHANGE_STATUS, SET_CURRENT } from '../store/countryStore.js';
-import layerStyle from '../config/layerStyle';
+import css from '../config/layerStyle';
 
 export default {
   name: 'visited-item',
@@ -36,7 +36,7 @@ export default {
       this.$store.commit({
         type: CHANGE_STATUS,
         id,
-        fillColor: layerStyle().visitedfillColor,
+        fillColor: css.visited.fillColor,
       })
     },
     hoverCountry(id) {

@@ -16,7 +16,7 @@
 
 <script>
 import { SET_STATE,  CHANGE_STATUS } from '../store/countryStore.js';
-import layerStyle from '../config/layerStyle';
+import css from '../config/layerStyle';
 
 export default {
   name: 'CountryCard',
@@ -47,7 +47,7 @@ export default {
       this.$store.commit({
         type: CHANGE_STATUS,
         id: this.currentCountry.id,
-        fillColor: layerStyle().visitedfillColor,
+        fillColor: css.visited.fillColor,
       })
     },
     fitBounds() {

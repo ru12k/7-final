@@ -1,14 +1,18 @@
 /*eslint-disable*/
-export default (fillColor) => { 
-  return {
-    style: {
-      fillColor,
+export default { 
+    layer: {
+      fillColor: 'blue',
       weight: 1,
       opacity: 1,
       color: 'white',
       fillOpacity: 0.7,
     },
-    hoverfillColor: 'teal',
-    visitedfillColor: 'orangered',
+    hover: { 
+      fillColor: 'teal',
+      weight: 2,
+      color: 'orangered',
+    },
+    visited: {
+      fillColor: 'orangered',
+    },
   };
-};

@@ -5,7 +5,6 @@ import Vuex from 'vuex';
 import L from 'leaflet';
 import { 
   countryStore,
-  ADD_MAP,
   SAVE_DATABASE,
   CHANGE_DATABASE,
   INIT_DATA,
@@ -13,19 +12,63 @@ import {
   SET_CURRENT,
   RESET_LAYER,
   ADD_LAYERS,
+  defaultDb,
 } from './countryStore';
-import { userStore, SET_USERID } from './userStore';
+import { 
+  userStore, 
+  SET_AUTH, 
+  SET_USERID, 
+  fire, 
+  auth  } from './userStore';
 import css from '../config/layerStyle';
-import defaultData from '../config/defaultDatabase.json';
-import { fire } from '../store/userStore';
+import defaultData from '../defaultDatabase.json';
 
 Vue.use(Vuex);
-
+const authType = store => {
+  store.subscribe((mutation, state) => {
+    if (mutation.type === SET_AUTH) {
+      const authenticated = mutation.payload.authenticated;
+      if (store.getters.authenticated === true) {
+        console.log('authType: if:  auth:', store.getters.authenticated, auth);
+        auth.auth0.getDelegationToken(auth.tokenOptions, (err, result) => {
+          console.log('getDelegationToken:', auth.tokenOptions);
+          if(!err) {
+            fire.fb.auth().signInWithCustomToken(result.id_token).catch( error => console.log("error.code:", error.code));          
+            fire.fb.auth().onAuthStateChanged(user => {
+              if (user) {
+                fire.ref = user.uid;
+                console.log('fire.ref:', fire.ref, user.uid);
+                fire.initDefaultDatabase(defaultDb);
+                store.commit({
+                  type: SET_USERID,
+                  userId: user.uid,
+                });
+                console.log('userid:', user.uid);
+                console.log('User is signed in:', user);
+              } else {
+                store.commit({
+                  type: SET_USERID,
+                  userId: null,
+                });
+                console.log('No user is signed in:', user);
+              }
+            });
+          }
+      });
+    } else {
+      console.log('authType: else:', store.getters.authenticated);
+        store.commit({
+          type: SET_USERID,
+          userId: null,
+        });
+      }
+    }
+  });
+};
 const initUser = store => {
     store.subscribe((mutation, state) => {
     if (mutation.type === SET_USERID) {
       const userId = mutation.payload.userId;
-      console.log('userId1:', userId);
       store.dispatch({
           type: SAVE_DATABASE,
           userId,
@@ -34,42 +77,22 @@ const initUser = store => {
   })
 };
 
-const addLayers = store => {
-  store.subscribe((mutation, state) => {
-    // if (mutation.type === ADD_MAP) {
-    //   const layers = store.getters.layers;
-    //   const map = mutation.payload.map;
-    //   layers.addTo(map);
-    // }
-    // if (mutation.type === ADD_LAYERS) {
-    //   const layers = mutation.payload.layers;
-    //   const map = store.getters.getMap;
-    //   layers.addTo(map);
-    // }
-  })
-};
-
 const createLayer = store => {
   store.subscribe((mutation, state) => {
     if (mutation.type === INIT_DATA) {
-      console.log('create layer - INIT_DATA:', mutation.payload.data);
+      store.commit({type: RESET_LAYER});
       const db = mutation.payload.data;
-      // const layers = store.getters.layers;
       const layers = L.layerGroup();
-      console.log('layers::', layers);
       Object.keys(db).forEach( id => {
         const style = css;
         const countryData = db[id];
         const layer = L.geoJSON();
-        console.log('id: 1111', id, db[id]);
         if (countryData.status) { 
-          console.log('test 1111:', id, style.visited.fillColor);
           style.layer.fillColor = style.visited.fillColor;
         } else {
-          console.log('test 2222:', id, countryData.fillColor);
           style.layer.fillColor = countryData.fillColor;
         }
-        console.log('test 3333:', id, style.layer.fillColor);
+        console.log('test 3333:', id, style.layer.fillColor, countryData.status);
         layer.on({
           mouseover: () => {
             store.commit({
@@ -145,7 +168,7 @@ const store = new Vuex.Store({
     countryStore,
     userStore,
   },
-  plugins: [initUser, addLayers, createLayer, changeStatus, setCurrent],
+  plugins: [authType, initUser, createLayer, changeStatus, setCurrent],
 });
 
 export default store;

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { SET_STATE,  CHANGE_STATUS } from '../store/countryStore.js';
+import { SET_STATE,  CHANGE_STATUS, CHANGE_DATABASE } from '../store/countryStore.js';
 import css from '../config/layerStyle';
 import { fire } from '../store/userStore.js';
 
@@ -48,12 +48,9 @@ export default {
   },
   methods: {
     changeStatus() {
-
-      // fire.changeStatus(self.newState)
-      this.$store.display({
+      this.$store.dispatch({
         type: CHANGE_DATABASE,
         id: this.country.id,
-        // fillColor: css.visited.fillColor,
       })
     },
     fitBounds() {

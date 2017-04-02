@@ -3,6 +3,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Fire from '../fire';
+import Auth from '../auth';
 import configFire from '../config/configFire';
   
 Vue.use(Vuex);
@@ -10,17 +11,23 @@ Vue.use(Vuex);
 export const SET_AUTH = 'SET_AUTH';
 export const SET_USERID = 'SET_USERID';
 export const fire = new Fire(configFire);
-// export const checkAuth = () => { return !!localStorage.getItem('id_token') };
+export const auth = new Auth();
 
 export const userStore = {
   state: {
       userId: null,
-      authenticated: !!localStorage.getItem('id_token'),
+      authenticated: false,
       secretThing: '',
   },
   mutations: {
-    [SET_AUTH]: (state, payload) => state.authenticated = payload.authenticated,
-    [SET_USERID]: (state, payload) => state.userId = payload.userId,
+    [SET_AUTH]: (state, payload) => {
+      console.log('SET_AUTH:', payload.authenticated);
+      state.authenticated = payload.authenticated;
+    },
+    [SET_USERID]: (state, payload) => { 
+      console.log('SET_USERID:', payload.userId);
+      state.userId = payload.userId;
+    },
   },
   actions: {},
   getters: {

@@ -32,9 +32,7 @@
 
 <script> 
 import mapConfig from '../config/mapConfig.js';
-import { SET_AUTH, SET_USERID } from '../store/userStore.js';
-import { auth } from '../auth.js';
-import { fire } from '../store/userStore.js';
+import { fire, auth, SET_AUTH, SET_USERID } from '../store/userStore.js';
 
 export default {
   name: 'menu',
@@ -57,7 +55,6 @@ export default {
       fire.fb.auth().signOut().then( 
         () => console.log("Signout Successful"), 
         error=> console.log(error));
-      // self.$store.commit({ type: RESET_LAYER });
     }
   },
 }

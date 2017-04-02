@@ -13,7 +13,17 @@ export const auth0Config = {
   },
 };
 
-export const auth = {
-  auth0: new Auth0({ domain: auth0Config.domain, clientID: auth0Config.clientId}),
-  lock: new Auth0Lock(auth0Config.clientId, auth0Config.domain, auth0Config.optionsLock),
+export const tokenOptions = {
+  id_token: localStorage.getItem('id_token'),
+  api: 'firebase',
+  scope: 'openid name email displayName',
+  target: auth0Config.clientId,
 };
+
+export default class {
+  constructor() {
+    this.auth0 = new Auth0({ domain: auth0Config.domain, clientID: auth0Config.clientId});
+    this.lock = new Auth0Lock(auth0Config.clientId, auth0Config.domain, auth0Config.optionsLock);
+    this.tokenOptions = tokenOptions;
+  }
+}

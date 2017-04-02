@@ -20,8 +20,6 @@ export default {
   computed: {
     map() { return this.$store.getters.getMap },
     layer() { return this.$store.getters.getLayer(this.id)},
-    // newState() { return this.$store.getters.getStateChanged(this.id) },
-    // userId() { return this.$store.getters.userId }
     flag() {
         if (this.id != '-99') {
           console.log('flag: ', this.id);
@@ -39,16 +37,6 @@ export default {
         type: CHANGE_DATABASE,
         id,
       });
-      // const self = this;
-      //   if (self.userId) {
-      //     fire.changeState({ [self.id]: self.newState });
-      //   } else {
-      //     store.commit({
-      //       type: CHANGE_DATA,
-      //       id: self.id,
-      //       data: self.newState,
-      //     });
-      //   }
     },
     hoverCountry(id) {
       this.fitBounds(id);

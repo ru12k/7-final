@@ -9,19 +9,31 @@
 import $ from '../node_modules/jquery/dist/jquery.min.js';
 import jQuery from '../node_modules/jquery/dist/jquery.min.js';
 import semantic from '../node_modules/semantic-ui-css/semantic.min.js';
-import auth0Config from './config/auth0Config.js';
 import '../node_modules/semantic-ui-css/semantic.min.css';
 import '../node_modules/leaflet/dist/leaflet.css';
 import './main.css';
-import { SET_AUTH, SET_USERID } from './store/userStore.js';
+import { fire, SET_AUTH, SET_USERID } from './store/userStore.js';
+import { auth,  auth0Config }   from './auth.js';
 
 export default {
   name: 'app',
   computed: {
-    lock() { return this.$store.getters.lock },
-    auth0() { return this.$store.getters.auth0 },
-    firebase() { return this.$store.getters.firebase },
+    // fb() {return this.$store.getters.fb },  
     authenticated() { return this.$store.getters.authenticated },
+    map() { return this.$store.getters.getMap },
+    layers() { return this.$store.getters.layers },
+    isMap() {
+      if (this.$store.getters.getMap) return true;
+      return false;
+    },
+    isLayer() {
+      if (this.$store.getters.layers) return true;
+      return false;
+    },
+    layersToMap() {
+      if (this.isMap && this.isLayer) return true;
+      return false;
+    },
   },
   watch: {
     authenticated: {
@@ -31,7 +43,14 @@ export default {
         else this.notAuthenticated();
       },
       immediate: true,
-    }
+    },
+    layersToMap: {
+      handler: function() {
+        const self = this;
+        if (this.layersToMap === true) this.layers.addTo(self.map);
+      },
+      immediate: true,
+    },
   },
   methods: {
     checkAuth() { return !!localStorage.getItem('id_token') },
@@ -40,9 +59,9 @@ export default {
         type: SET_AUTH,
         authenticated: this.checkAuth(),
       });
-      this.lock.on('authenticated', (authResult) => {
+      auth.lock.on('authenticated', (authResult) => {
         localStorage.setItem('id_token', authResult.idToken);
-        this.lock.getProfile(authResult.idToken, (error, profile) => {
+        auth.lock.getProfile(authResult.idToken, (error, profile) => {
           if (error) {
             console.log(error);
             return;
@@ -54,7 +73,7 @@ export default {
           });
         });
       });
-      this.lock.on('authorization_error',  error => console.log(error));
+      auth.lock.on('authorization_error',  error => console.log(error));
     },
     firebaseAuth() {
       const self = this;
@@ -64,12 +83,12 @@ export default {
         scope: 'openid name email displayName',
         target: auth0Config.clientId,
       };
-      self.auth0.getDelegationToken(options, (err, result) => {
+      auth.auth0.getDelegationToken(options, (err, result) => {
         if(!err) {
-          self.firebase.auth().signInWithCustomToken(result.id_token).catch( error => console.log("error.code:", error.code));
-          self.firebase.auth().onAuthStateChanged(user => {
+          fire.fb.auth().signInWithCustomToken(result.id_token).catch( error => console.log("error.code:", error.code));          
+          fire.fb.auth().(user => {
             if (user) {
-              self.userId = user.uid;
+              // self.userId = user.uid;
               self.$store.commit({
                 type: SET_USERID,
                 userId: user.uid,
@@ -92,6 +111,7 @@ export default {
   },
   mounted() {
     this.authListener();
+
   }
 };
 </script>

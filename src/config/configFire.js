@@ -1,4 +1,3 @@
-/*eslint-disable*/
 export default {
   apiKey: "AIzaSyDKT3WAIkuhdp2AD0HWEET6D1W-JB40pXs",
   authDomain: "mytravels-c9932.firebaseapp.com",

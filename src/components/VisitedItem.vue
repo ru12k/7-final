@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { CHANGE_STATUS, SET_CURRENT } from '../store/countryStore.js';
+import { CHANGE_DATA, CHANGE_DATABASE, SET_CURRENT } from '../store/countryStore.js';
 import css from '../config/layerStyle';
 
 export default {
@@ -19,7 +19,9 @@ export default {
   props: ['id', 'name'],
   computed: {
     map() { return this.$store.getters.getMap },
-    layer() { return this.$store.getters.getLayer},
+    layer() { return this.$store.getters.getLayer(this.id)},
+    // newState() { return this.$store.getters.getStateChanged(this.id) },
+    // userId() { return this.$store.getters.userId }
     flag() {
         if (this.id != '-99') {
           console.log('flag: ', this.id);
@@ -29,15 +31,24 @@ export default {
   },
   methods: {
     fitBounds(id) {
-      const center = this.layer(this.id).getBounds().getCenter();
+      const center = this.layer.getBounds().getCenter();
       this.map.flyTo(center, 3);
     },
     changeStatus(id) {
-      this.$store.commit({
-        type: CHANGE_STATUS,
+      this.$store.dispatch({
+        type: CHANGE_DATABASE,
         id,
-        fillColor: css.visited.fillColor,
-      })
+      });
+      // const self = this;
+      //   if (self.userId) {
+      //     fire.changeState({ [self.id]: self.newState });
+      //   } else {
+      //     store.commit({
+      //       type: CHANGE_DATA,
+      //       id: self.id,
+      //       data: self.newState,
+      //     });
+      //   }
     },
     hoverCountry(id) {
       this.fitBounds(id);

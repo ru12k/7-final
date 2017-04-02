@@ -6,29 +6,28 @@ import L from 'leaflet';
 import { 
   countryStore,
   ADD_MAP,
+  SAVE_DATABASE,
+  CHANGE_DATABASE,
   INIT_DATA,
-  SET_DATA,
+  CHANGE_DATA,
   SET_CURRENT,
-  CHANGE_STATUS,
   RESET_LAYER,
-  INIT_DB,
+  ADD_LAYERS,
 } from './countryStore';
 import { userStore, SET_USERID } from './userStore';
 import css from '../config/layerStyle';
-import mapConfig from '../config/mapConfig.js';
-import defaultData from '../config/defaultData.json';
-import geoData from '../config/countriesData.json';
+import defaultData from '../config/defaultDatabase.json';
+import { fire } from '../store/userStore';
 
 Vue.use(Vuex);
 
 const initUser = store => {
     store.subscribe((mutation, state) => {
     if (mutation.type === SET_USERID) {
-      store.commit({ type: RESET_LAYER });
       const userId = mutation.payload.userId;
       console.log('userId1:', userId);
       store.dispatch({
-          type: INIT_DATA,
+          type: SAVE_DATABASE,
           userId,
       });
     }
@@ -37,55 +36,70 @@ const initUser = store => {
 
 const addLayers = store => {
   store.subscribe((mutation, state) => {
-    if (mutation.type === ADD_MAP) {
-      const layers = store.getters.layers;
-      const map = mutation.payload.map;
-      layers.addTo(map);
-    }
+    // if (mutation.type === ADD_MAP) {
+    //   const layers = store.getters.layers;
+    //   const map = mutation.payload.map;
+    //   layers.addTo(map);
+    // }
+    // if (mutation.type === ADD_LAYERS) {
+    //   const layers = mutation.payload.layers;
+    //   const map = store.getters.getMap;
+    //   layers.addTo(map);
+    // }
   })
 };
 
 const createLayer = store => {
   store.subscribe((mutation, state) => {
-    if (mutation.type === INIT_DB) {
-      console.log('init--db');
+    if (mutation.type === INIT_DATA) {
+      console.log('create layer - INIT_DATA:', mutation.payload.data);
       const db = mutation.payload.data;
-      const layers = store.getters.layers;
-      console.log('layers:', layers);
-      geoData.forEach( geo => {
+      // const layers = store.getters.layers;
+      const layers = L.layerGroup();
+      console.log('layers::', layers);
+      Object.keys(db).forEach( id => {
         const style = css;
-        const layerId = geo.cca2;
+        const countryData = db[id];
         const layer = L.geoJSON();
-        style.layer.fillColor = db[layerId].fillColor;
+        console.log('id: 1111', id, db[id]);
+        if (countryData.status) { 
+          console.log('test 1111:', id, style.visited.fillColor);
+          style.layer.fillColor = style.visited.fillColor;
+        } else {
+          console.log('test 2222:', id, countryData.fillColor);
+          style.layer.fillColor = countryData.fillColor;
+        }
+        console.log('test 3333:', id, style.layer.fillColor);
         layer.on({
           mouseover: () => {
-            // layer.bringToFront();
             store.commit({
               type: SET_CURRENT,
-              id: layerId,
+              id,
               value: true,
             });
           },
           mouseout: () => {
-            // layer.bringToBack();
             store.commit({
               type: SET_CURRENT,
-              id: layerId,
+              id,
               value: false,
             });
           },
           click: (e) => {
-            store.commit({
-              type: CHANGE_STATUS,
-              id: layerId,
-              fillColor: style.visited.fillColor,
+            store.dispatch({
+              type: CHANGE_DATABASE,
+              id,
             });
           }
         });
-        layer.id = layerId;
-        layer.addData(geo.geojson);
+        layer.id = id;
+        layer.addData(defaultData[id].geojson);
         layer.setStyle(style.layer);
         layer.addTo(layers);
+      });
+      store.commit({
+        type: ADD_LAYERS,
+        layers,
       });
     }
   })
@@ -93,10 +107,11 @@ const createLayer = store => {
 
 const changeStatus = store => {
   store.subscribe((mutation, state) => {
-    if (mutation.type === CHANGE_STATUS) {
+    if (mutation.type === CHANGE_DATA) {
       const id = mutation.payload.id;
-      const fillColor = store.getters.getCountry(id).fillColor;
-      store.getters.getLayer(id).setStyle({ fillColor });
+      const state = mutation.payload.data;
+      if (state.status) store.getters.getLayer(id).setStyle({ fillColor: css.visited.fillColor }); 
+      else store.getters.getLayer(id).setStyle({ fillColor: state.fillColor });
     }
   })
 };
@@ -104,18 +119,21 @@ const changeStatus = store => {
 const setCurrent = store => {
   store.subscribe((mutation, state) => {
     if (mutation.type === SET_CURRENT) {
-      const style = css;
       const id = mutation.payload.id;
+      const state = store.getters.getCountry(id);
       const layer = store.getters.getLayer(id);
-      if (mutation.payload.value) layer.setStyle({ 
-        fillColor: style.hover.fillColor,
-        weight: style.hover.weight,
+      const fillColor = css.hover.fillColor;
+      if (mutation.payload.value) { 
+        layer.setStyle({ 
+        fillColor,
+        weight: css.hover.weight,
        });
-      else {
-        const fillColor = store.getters.getCountry(id).fillColor;
+      } else {
+        if (state.status) fillColor = css.visited.fillColor;
+        else fillColor = state.fillColor;
         layer.setStyle({ 
           fillColor,
-          weight: style.layer.weight,
+          weight: css.layer.weight,
         });
       }
     }

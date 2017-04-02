@@ -2,37 +2,30 @@
 /*eslint-disable*/
 import Vue from 'vue';
 import Vuex from 'vuex';
-import firebase from 'firebase';
-import auth0Config from '../config/auth0Config';
-import fireConfig from '../config/firebaseConfig';
-
+import Fire from '../fire';
+import configFire from '../config/configFire';
+  
 Vue.use(Vuex);
 
 export const SET_AUTH = 'SET_AUTH';
 export const SET_USERID = 'SET_USERID';
+export const fire = new Fire(configFire);
+// export const checkAuth = () => { return !!localStorage.getItem('id_token') };
 
 export const userStore = {
   state: {
-     user: {
-      lock: new Auth0Lock(auth0Config.clientId, auth0Config.domain, auth0Config.optionsLock),
-      auth0: new Auth0({ domain : auth0Config.domain, clientID: auth0Config.clientId}),
-      firebase: firebase.initializeApp(fireConfig, "auth0"),
       userId: null,
-      authenticated: false,
+      authenticated: !!localStorage.getItem('id_token'),
       secretThing: '',
-    }
   },
   mutations: {
-    [SET_AUTH]: (state, payload) => state.user.authenticated = payload.authenticated,
-    [SET_USERID]: (state, payload) => state.user.userId = payload.userId,
+    [SET_AUTH]: (state, payload) => state.authenticated = payload.authenticated,
+    [SET_USERID]: (state, payload) => state.userId = payload.userId,
   },
   actions: {},
   getters: {
-    lock: state => state.user.lock,
-    auth0: state => state.user.auth0,
-    authenticated: state => state.user.authenticated,
-    userId: state => state.user.userId,
-    firebase: state => state.user.firebase,
-    secretThing: state => state.user.secretThing,
+    authenticated: state => state.authenticated,
+    userId: state => state.userId,
+    secretThing: state => state.secretThing,
   },
-}
+};

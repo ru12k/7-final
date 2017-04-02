@@ -1,9 +1,9 @@
 <template>
-  <div id="card-wrapper" v-if="currentID.init" v-on:click="fitBounds">
+  <div id="card-wrapper" v-if="current.init" v-on:click="fitBounds">
   <h5 class="custom-header"><i class="info circle icon"></i><span>Selected countries:</span></h5>
   <div class="custom-content" v-bind:style="fillColor">
     <div class="custom-text">
-      <h4 class="header" style="color: white" >{{currentCountry.commonName}}</h4>
+      <h4 class="header" style="color: white" >{{country.commonName}}</h4>
       <div>{{ descriptionStatus}}</div>
     </div>
     <div class="custom-flag">
@@ -17,42 +17,48 @@
 <script>
 import { SET_STATE,  CHANGE_STATUS } from '../store/countryStore.js';
 import css from '../config/layerStyle';
+import { fire } from '../store/userStore.js';
 
 export default {
   name: 'CountryCard',
   computed: {
-    currentCountry() { return this.$store.getters.currentCountry },
-    currentID() { return this.$store.getters.currentID },
+    country() { return this.$store.getters.getCountry(this.current.id) },
+    current() { return this.$store.getters.current },
+    newState() { return { [this.current.id]: this.$store.getters.getStateChanged(this.current.id) } },
     map() { return this.$store.getters.getMap },
     layer() { return this.$store.getters.getLayer},
     flag() {
-      if (this.currentCountry.id) {
-        return require(`../assets/flags/4x3/${this.currentCountry.id}.svg`);
+      if (this.current.id) {
+        return require(`../assets/flags/4x3/${this.current.id}.svg`);
       }
     },
     fillColor() {
-      return { 'background-color': this.currentCountry.fillColor };
+      let fillColor = this.country.fillColor;
+      if (this.country.status) fillColor = css.visited.fillColor;
+      return { 'background-color': fillColor };
     },
     descriptionStatus() {
-      if (this.currentCountry.status) return `alredy visited`;
+      if (this.country.status) return `alredy visited`;
       return `not yet visited`;
     },
     buttonText() {
-      if (this.currentCountry.status) return 'Remove from visited list';
+      if (this.country.status) return 'Remove from visited list';
       return 'Add to visited list';
     },
   },
   methods: {
     changeStatus() {
-      this.$store.commit({
-        type: CHANGE_STATUS,
-        id: this.currentCountry.id,
-        fillColor: css.visited.fillColor,
+
+      // fire.changeStatus(self.newState)
+      this.$store.display({
+        type: CHANGE_DATABASE,
+        id: this.country.id,
+        // fillColor: css.visited.fillColor,
       })
     },
     fitBounds() {
       const self = this;
-      const center = this.layer(self.currentCountry.id).getBounds().getCenter();
+      const center = this.layer(self.country.id).getBounds().getCenter();
       this.map.flyTo(center, 3);
     },
   }

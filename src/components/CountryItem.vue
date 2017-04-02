@@ -21,8 +21,9 @@
 </template>
 
   <script>
-  import { CHANGE_STATUS, SET_CURRENT } from '../store/countryStore.js';
+  import { CHANGE_STATUS,CHANGE_DATABASE, SET_CURRENT } from '../store/countryStore.js';
   import css from '../config/layerStyle';
+  import fire from '../store/userStore.js'
 
   let self = null;
     export default {
@@ -42,6 +43,7 @@
         },
         map() { return this.$store.getters.getMap },
         layer() { return this.$store.getters.getLayer},
+        // newState() { return { [this.id]: this.$store.getters.getStateChanged(this.id) } },
       },
     methods: {
       fitBounds(id) {
@@ -49,15 +51,25 @@
         this.map.flyTo(center, 3);
       },
       changeStatus(id) {
-        this.$store.commit({
-          type: CHANGE_STATUS,
+        this.$store.dispatch({
+          type: CHANGE_DATABASE,
           id,
-          fillColor: css.visited.fillColor,
-        })
+        });
+
+        // const newState = {
+        //   [id]: self.getStateChanged(id),
+        // }
+        // fire.changeStatus(self.newState);
+        // this.$store.commit({
+        //   type: CHANGE_STATUS,
+        //   id,
+        // })
       },
       hoverCountry(id) {
+        let fillColor = this.fillColor;
+        if (this.status) fillColor = css.visited.fillColor;
         this.dataHoverStyle = { 
-          'background-color': this.fillColor,
+          'background-color': fillColor,
           'color': 'white',
         };
         this.$store.commit({

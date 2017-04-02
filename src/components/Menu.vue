@@ -32,30 +32,32 @@
 
 <script> 
 import mapConfig from '../config/mapConfig.js';
-import { SET_AUTH  } from '../store/countryStore.js';
+import { SET_AUTH, SET_USERID } from '../store/userStore.js';
+import { auth } from '../auth.js';
+import { fire } from '../store/userStore.js';
 
 export default {
   name: 'menu',
   props: ['Login', 'Logout', 'Authenticated'],
   computed: {
     map() { return this.$store.getters.getMap },
-    lock() { return this.$store.getters.lock },
     authenticated() { return this.$store.getters.authenticated },
-    firebase() { return this.$store.getters.firebase },
   },
   methods: {
     onClick() { this.map.setView(mapConfig.center, mapConfig.zoom) },
-    login() { this.lock.show() },
+    login() { auth.lock.show() },
     logout() {
+      const self = this;
       localStorage.removeItem('id_token');
       localStorage.removeItem('profile');
       this.$store.commit({ 
         type: SET_AUTH,
         authenticated: false,
          });
-      this.firebase.auth().signOut().then( 
+      fire.fb.auth().signOut().then( 
         () => console.log("Signout Successful"), 
         error=> console.log(error));
+      // self.$store.commit({ type: RESET_LAYER });
     }
   },
 }

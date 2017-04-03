@@ -53,6 +53,7 @@ export default {
             return;
           }
           localStorage.setItem('profile', JSON.stringify(profile));
+          console.log('profile', JSON.stringify(profile));
           this.$store.commit({
             type: SET_AUTH,
             authenticated: true,

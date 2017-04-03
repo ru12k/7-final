@@ -16,19 +16,21 @@ export default {
   },
   methods: {
     initMap() {
-      const self = this;
-      this.map = L.map('map-container', {
-          zoomControl: false,
-        }).setView(mapConfig.center, mapConfig.zoom);
-      L.tileLayer(mapConfig.url, {
-        attribution: mapConfig.attribution,
-        id: mapConfig.id,
-        maxZoom: mapConfig.maxZoom,
-      }).addTo(self.map);
-      this.$store.commit({
-          type: ADD_MAP,
-          map: this.map,
-        });
+        this.$nextTick(function () {
+          const self = this;
+          this.map = L.map('map-container', {
+              zoomControl: false,
+            }).setView(mapConfig.center, mapConfig.zoom);
+          L.tileLayer(mapConfig.url, {
+            attribution: mapConfig.attribution,
+            id: mapConfig.id,
+            maxZoom: mapConfig.maxZoom,
+          }).addTo(self.map);
+          this.$store.commit({
+              type: ADD_MAP,
+              map: this.map,
+            });
+        })
       },
   },
   mounted() {

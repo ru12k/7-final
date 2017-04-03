@@ -30,7 +30,10 @@ const authType = store => {
       const authenticated = mutation.payload.authenticated;
       if (store.getters.authenticated === true) {
         console.log('authType: if:  auth:', store.getters.authenticated, auth);
-        auth.auth0.getDelegationToken(auth.tokenOptions, (err, result) => {
+        const options = auth.tokenOptions;
+        options.id_token = localStorage.getItem('id_token');
+        console.log('id_token:', options.id_token);
+        auth.auth0.getDelegationToken(options, (err, result) => {
           console.log('getDelegationToken:', auth.tokenOptions);
           if(!err) {
             fire.fb.auth().signInWithCustomToken(result.id_token).catch( error => console.log("error.code:", error.code));          
@@ -92,7 +95,7 @@ const createLayer = store => {
         } else {
           style.layer.fillColor = countryData.fillColor;
         }
-        console.log('test 3333:', id, style.layer.fillColor, countryData.status);
+        console.log('create layer:', id, style.layer.fillColor, countryData.status);
         layer.on({
           mouseover: () => {
             store.commit({

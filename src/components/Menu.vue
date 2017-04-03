@@ -14,6 +14,7 @@
       </a>
       <div class="right menu">
         <a class="item" style="padding: 0;">
+        <v-userlabel v-show="authenticated"></v-userlabel>
         <div class="ui buttons">
           <button class="ui positive button" @click="login()" v-show="!authenticated">
             <i class="sign in icon"></i>
@@ -33,10 +34,14 @@
 <script> 
 import mapConfig from '../config/mapConfig.js';
 import { fire, auth, SET_AUTH, SET_USERID } from '../store/userStore.js';
+import UserLabel from '../components/userLabel';
 
 export default {
   name: 'menu',
   props: ['Login', 'Logout', 'Authenticated'],
+  components: {
+    'v-userlabel': UserLabel,
+  },
   computed: {
     map() { return this.$store.getters.getMap },
     authenticated() { return this.$store.getters.authenticated },

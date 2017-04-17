@@ -20,45 +20,31 @@ export default {
   },
   methods: {
     ...mapMutations({ addMap: types.ADD_MAP }),
-    // initMap() {
-    //   const self = this;
-    //   self.appMap = false;
-    //   self.appMap = L.map('map-container', {
-    //       zoomControl: false,
-    //     }).setView(mapConfig.center, mapConfig.zoom);
-    //   console.log('CHECK MAP:', self.appMap);
-    //   L.tileLayer(mapConfig.url, {
-    //     attribution: mapConfig.attribution,
-    //     id: mapConfig.id,
-    //     maxZoom: mapConfig.maxZoom,
-    //   }).addTo(self.appMap);
-    //   console.log('CHECK MAP AND LAYERS:', self.layers, self.appMap);
-    //   self.layers.addTo(self.appMap);
-    //   self.addMap({map: self.appMap});
-    // },
+    initMap() {
+      const self = this;
+      self.appMap = false;
+      self.appMap = L.map('map-container', {
+          zoomControl: false,
+        }).setView(mapConfig.center, mapConfig.zoom);
+      console.log('CHECK MAP:', self.appMap);
+      L.tileLayer(mapConfig.url, {
+        attribution: mapConfig.attribution,
+        id: mapConfig.id,
+        maxZoom: mapConfig.maxZoom,
+      }).addTo(self.appMap);
+      console.log('CHECK MAP AND LAYERS:', self.layers, self.appMap);
+      self.addMap({map: self.appMap});
+    },
   },
   mounted() {
     const self = this;
-    console.log('START MOUNTED MAP:');
-    self.appMap = L.map('map-container', {
-        zoomControl: false,
-      }).setView(mapConfig.center, mapConfig.zoom);
-    console.log('CHECK MAP:', self.appMap);
-    L.tileLayer(mapConfig.url, {
-      attribution: mapConfig.attribution,
-      id: mapConfig.id,
-      maxZoom: mapConfig.maxZoom,
-    }).addTo(self.appMap);
-    self.addMap({map: self.appMap});
+    this.initMap();
     this.$store.watch( 
       state => state.load,
       function() { 
         console.log('START WATCH LAYER:');
         self.layers.addTo(self.map);
-        self.map.on('viewreset', function(){
-          console.log('resetting..');
-        });
-        // self.initMap();
+        self.map.fire('viewreset');
       },
       {immediate: true}
     );

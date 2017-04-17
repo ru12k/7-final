@@ -7,11 +7,11 @@
     <div class="custom-flag">
       <img :src="flag">
     </div>
-    <div class="custom-name" v-on:click="changeStatus(id), fitBounds(id)">
+    <div class="custom-name" v-on:click="changeStatus({id}), fitBounds(id)">
       <h5 v-bind:style="dataHoverStyle" style="font-size: 12px">{{name}}</h5>
     </div>
     <div class="ui checkbox">
-      <input type="checkbox" :checked="status" v-on:click="changeStatus(id), fitBounds(id)">
+      <input type="checkbox" :checked="status" v-on:click="changeStatus({id}), fitBounds(id)">
       <label></label>
     </div>
     <div class="ui mini primary icon buttons"  style="margin-right: 5px" v-on:click="fitBounds(id)">
@@ -21,8 +21,9 @@
 </template>
 
   <script>
-  import { CHANGE_STATUS,CHANGE_DATABASE, SET_CURRENT } from '../store/countryStore.js';
+  import * as types from '../store/types.js';
   import css from '../config/layerStyle';
+  import { mapMutations, mapActions, mapGetters } from 'vuex';
 
   let self = null;
     export default {
@@ -35,24 +36,19 @@
         }
       },
       computed: {
+        ...mapGetters(['map', 'layer']),
         flag() {
           if (this.id != '-99') {
             return require(`../assets/flags/4x3/${this.id}.svg`);
           }
         },
-        map() { return this.$store.getters.getMap },
-        layer() { return this.$store.getters.getLayer},
       },
     methods: {
+      ...mapMutations({ setActive: types.SET_ACTIVE }),
+      ...mapActions({ changeStatus: types.CHANGE_DATABASE }),
       fitBounds(id) {
         const center = this.layer(this.id).getBounds().getCenter();
         this.map.flyTo(center, 3);
-      },
-      changeStatus(id) {
-        this.$store.dispatch({
-          type: CHANGE_DATABASE,
-          id,
-        });
       },
       hoverCountry(id) {
         let fillColor = this.fillColor;
@@ -61,19 +57,17 @@
           'background-color': fillColor,
           'color': 'white',
         };
-        this.$store.commit({
-          type: SET_CURRENT,
+        this.setActive({
           id,
-          value: true,
+          value: true
         });
       },
       leaveCountry(id) {
         this.dataHoverStyle = {};
-        this.$store.commit({
-          type: SET_CURRENT,
+        this.setActive({
           id,
           value: false,
-        }); 
+        });
       },
     },
     }

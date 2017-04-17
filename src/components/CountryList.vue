@@ -25,8 +25,9 @@
 </template>
 
 <script>
-import { CHANGE_STATUS } from '../store/countryStore.js';
+import * as types from '../store/types.js';
 import Country from './CountryItem';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'CountryList',
@@ -34,9 +35,10 @@ export default {
     'v-country': Country,
   },
   computed: {
-    countries() { return this.$store.getters.countries },
+     ...mapGetters(['countries']),
   },
 }
+
 </script>
 
 <style scoped>

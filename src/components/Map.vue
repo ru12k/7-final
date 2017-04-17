@@ -4,38 +4,65 @@
 <script>
 import L from '../../node_modules/leaflet/dist/leaflet.js';
 import mapConfig from '../config/mapConfig.js';
-import { ADD_MAP} from '../store/countryStore.js';
+import * as types from '../store/types.js';
+import { mapMutations, mapGetters } from 'vuex';
 
 let self = null;
 export default {
   name: 'map',
   data() {
     return {
-      map: false,
+      appMap: false,
     }
   },
+  computed: {
+    ...mapGetters(['loadLayers', 'layers', 'map']),
+  },
   methods: {
-    initMap() {
-        this.$nextTick(function () {
-          const self = this;
-          this.map = L.map('map-container', {
-              zoomControl: false,
-            }).setView(mapConfig.center, mapConfig.zoom);
-          L.tileLayer(mapConfig.url, {
-            attribution: mapConfig.attribution,
-            id: mapConfig.id,
-            maxZoom: mapConfig.maxZoom,
-          }).addTo(self.map);
-          this.$store.commit({
-              type: ADD_MAP,
-              map: this.map,
-            });
-        })
-      },
+    ...mapMutations({ addMap: types.ADD_MAP }),
+    // initMap() {
+    //   const self = this;
+    //   self.appMap = false;
+    //   self.appMap = L.map('map-container', {
+    //       zoomControl: false,
+    //     }).setView(mapConfig.center, mapConfig.zoom);
+    //   console.log('CHECK MAP:', self.appMap);
+    //   L.tileLayer(mapConfig.url, {
+    //     attribution: mapConfig.attribution,
+    //     id: mapConfig.id,
+    //     maxZoom: mapConfig.maxZoom,
+    //   }).addTo(self.appMap);
+    //   console.log('CHECK MAP AND LAYERS:', self.layers, self.appMap);
+    //   self.layers.addTo(self.appMap);
+    //   self.addMap({map: self.appMap});
+    // },
   },
   mounted() {
-    this.initMap();
-  },
+    const self = this;
+    console.log('START MOUNTED MAP:');
+    self.appMap = L.map('map-container', {
+        zoomControl: false,
+      }).setView(mapConfig.center, mapConfig.zoom);
+    console.log('CHECK MAP:', self.appMap);
+    L.tileLayer(mapConfig.url, {
+      attribution: mapConfig.attribution,
+      id: mapConfig.id,
+      maxZoom: mapConfig.maxZoom,
+    }).addTo(self.appMap);
+    self.addMap({map: self.appMap});
+    this.$store.watch( 
+      state => state.load,
+      function() { 
+        console.log('START WATCH LAYER:');
+        self.layers.addTo(self.map);
+        self.map.on('viewreset', function(){
+          console.log('resetting..');
+        });
+        // self.initMap();
+      },
+      {immediate: true}
+    );
+  }
 }
 </script>
 <style>

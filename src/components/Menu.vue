@@ -14,7 +14,7 @@
       </a>
       <div class="right menu">
         <a class="item" style="padding: 0;">
-        <v-userlabel v-show="authenticated"></v-userlabel>
+        <!-- <v-userlabel v-show="authenticated"></v-userlabel> -->
         <div class="ui buttons">
           <button class="ui positive button" @click="login()" v-show="!authenticated">
             <i class="sign in icon"></i>
@@ -33,8 +33,11 @@
 
 <script> 
 import mapConfig from '../config/mapConfig.js';
-import { fire, auth, SET_AUTH, SET_USERID } from '../store/userStore.js';
+import { fire, auth } from '../store/store.js';
+import * as types from '../store/types.js';
+
 import UserLabel from '../components/userLabel';
+import { mapMutations, mapGetters } from 'vuex';
 
 export default {
   name: 'menu',
@@ -43,23 +46,33 @@ export default {
     'v-userlabel': UserLabel,
   },
   computed: {
-    map() { return this.$store.getters.getMap },
-    authenticated() { return this.$store.getters.authenticated },
+        ...mapGetters(['map', 'authenticated']),
   },
   methods: {
+    ...mapMutations({ setAuth: types.SET_AUTH}),
+    // setAuth(value) {
+    //   this.$store.commit({ 
+    //     type: types.SET_AUTH,
+    //     authenticated: value,
+    //    });
+    //  },
     onClick() { this.map.setView(mapConfig.center, mapConfig.zoom) },
-    login() { auth.lock.show() },
-    logout() {
+    login() { auth.login() },
+    // logout() {
+    //   const self = this;
+    //   localStorage.removeItem('id_token');
+    //   localStorage.removeItem('profile');
+    //   this.$store.commit({ 
+    //     type: types.SET_AUTH,
+    //     authenticated: false,
+    //      });
+    //   fire.fb.auth().signOut().then( 
+    //     () => console.log("Signout Successful"), 
+    //     error=> console.log(error));
+    // }
+    logout() { 
       const self = this;
-      localStorage.removeItem('id_token');
-      localStorage.removeItem('profile');
-      this.$store.commit({ 
-        type: SET_AUTH,
-        authenticated: false,
-         });
-      fire.fb.auth().signOut().then( 
-        () => console.log("Signout Successful"), 
-        error=> console.log(error));
+      auth.logout(self.setAuth) 
     }
   },
 }

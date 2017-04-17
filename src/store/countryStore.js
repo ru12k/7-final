@@ -3,9 +3,9 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import L from 'leaflet';
-import { fire } from '../store/userStore';
+import { fire } from '../store/store';
 import defaultData from '../defaultDatabase.json';
-
+import * as types from '../store/types';
 Vue.use(Vuex);
 
 export const defaultDb = (() => {
@@ -22,15 +22,6 @@ export const defaultDb = (() => {
   return result;
 })();
 
-export const SAVE_DATABASE = 'SAVE_DATABASE';
-export const CHANGE_DATABASE = 'CHANGE_DATABASE'; 
-export const INIT_DATA = 'INIT_DATA';
-export const CHANGE_DATA = 'CHANGE_STATUS';
-export const SET_CURRENT = 'SET_CURRENT';
-export const ADD_MAP = 'ADD_MAP';
-export const RESET_LAYER = 'RESET_LAYER';
-export const ADD_LAYERS = 'ADD_LAYERS';
-
 export const countryStore = {
   state: {
     data: {},
@@ -43,40 +34,40 @@ export const countryStore = {
     },
   },
   mutations: {
-    [ADD_MAP]: (state, payload) => state.map = payload.map,
-    [ADD_LAYERS]: (state, payload) => state.layers = payload.layers,
-    [INIT_DATA]: (state, payload) => {
+    [types.ADD_MAP]: (state, payload) => state.map = payload.map,
+    [types.ADD_LAYERS]: (state, payload) => state.layers = payload.layers,
+    [types.INIT_DATA]: (state, payload) => {
       console.log('INIT_DATA:');
       state.data = payload.data
     },
-    [CHANGE_DATA]: (state, payload) => {
+    [types.CHANGE_DATA]: (state, payload) => {
       console.log('CHANGE_DATA:');
       Vue.set(state.data, payload.id, payload.data)
     },
-    [RESET_LAYER]: (state) => state.layers = false,
-    [SET_CURRENT]: (state, payload) => { 
+    [types.RESET_LAYER]: (state) => state.layers = false,
+    [types.SET_CURRENT]: (state, payload) => { 
       state.current.init = true;
       state.current.id = payload.id;
       state.current.value = payload.value;
     },
   }, 
   actions: {
-    [SAVE_DATABASE]: (context, payload) => {
-      const initDb = data => context.commit({ type: INIT_DATA, data });
-      const changeData = data => context.commit({ type: CHANGE_DATA, data});
+    [types.SAVE_DATABASE]: (context, payload) => {
+      const initDb = data => context.commit({ type: types.INIT_DATA, data });
+      const changeData = data => context.commit({ type: types.CHANGE_DATA, data});
       if (payload.userId === null) initDb(defaultDb);
       else {
         fire.onInitDatabase(initDb);
         fire.onChangeDatabase(changeData);
       }
     },
-    [CHANGE_DATABASE]: ({ dispatch, commit, getters, rootGetters }, payload) => {
+    [types.CHANGE_DATABASE]: ({ dispatch, commit, getters, rootGetters }, payload) => {
       const newState = rootGetters.getStateChanged(payload.id);
       if (rootGetters.userId) {
         fire.changeDatabase({ [payload.id]: newState });
       } else {
         commit({
-          type: CHANGE_DATA,
+          type: types.CHANGE_DATA,
           id: payload.id,
           data: newState,
         });

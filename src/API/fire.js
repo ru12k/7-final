@@ -21,16 +21,12 @@ export default class {
     console.log('changeDatabase:', state);
     this._ref.update(state); 
   }
-  onInitDatabase(mutations) {
-    this._ref.once('value', snapshot => { 
-      console.log('value', snapshot.val());
-      mutations(snapshot.val());
-    });
+  onInitDatabase() {
+    return this._ref.once('value').then(snapshot => snapshot.val());
   }
-  onChangeDatabase(mutations) {
-    this._ref.on('child_changed',  snapshot => { 
-      console.log('child_changed', snapshot.val());
-      mutations(snapshot.val());
+  onChangeDatabase(mutation) {
+    this._ref.on('child_changed', (snapshot, id) => { 
+      mutation(snapshot.val(), id);
     });
   }
 }

@@ -14,7 +14,7 @@
       </a>
       <div class="right menu">
         <a class="item" style="padding: 0;">
-        <!-- <v-userlabel v-show="authenticated"></v-userlabel> -->
+        <v-userlabel v-show="authenticated"></v-userlabel>
         <div class="ui buttons">
           <button class="ui positive button" @click="login()" v-show="!authenticated">
             <i class="sign in icon"></i>

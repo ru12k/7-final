@@ -16,7 +16,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['loadLayers', 'layers', 'map']),
+    ...mapGetters(['load', 'layers', 'map']),
   },
   methods: {
     ...mapMutations({ addMap: types.ADD_MAP }),
@@ -41,10 +41,10 @@ export default {
     this.initMap();
     this.$store.watch( 
       state => state.load,
-      function() { 
-        console.log('START WATCH LAYER:');
-        self.layers.addTo(self.map);
-        self.map.fire('viewreset');
+      function () {
+        if (self.load) {
+           self.layers.addTo(self.appMap);
+        }
       },
       {immediate: true}
     );

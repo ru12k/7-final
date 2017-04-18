@@ -38,43 +38,13 @@ export default {
     'v-menu': Menu,
   },
   computed: {
-    ...mapGetters([
-      // 'map',
-      // 'layers',
-      'authenticated',
-    ]),
-  //   isMap() {
-  //     if (this.map) return true;
-  //     return false;
-  //   },
-  //   isLayer() {
-  //     if (this.layers) return true;
-  //     return false;
-  //   },
-  //   layersToMap() {
-  //     if (this.isMap && this.isLayer) return true;
-  //     return false;
-  //   },
-  //   checkAuth() { return !!localStorage.getItem('id_token') },
-  // },
-  // watch: {
-  //   layersToMap: {
-  //     handler: function() {
-  //       const self = this;
-  //       if (this.layersToMap === true) {
-  //         this.layers.addTo(self.map);
-  //       }
-  //     },
-  //     // immediate: true,
-  //   },
-  // },
+    ...mapGetters(['authenticated']),
   },
   methods: {
     ...mapMutations({ setAuth: types.SET_AUTH }),
   },
   mounted() {
     const self = this;
-    console.log('this.authenticated_1:', this.authenticated);
     auth.authListener(self.setAuth);
   },
 };
@@ -85,9 +55,6 @@ export default {
   width: 100%;
   height: 100%;
   position: relative;
-  /* width: 100%;
-  // height: 100%;
-  */
   margin: 0 auto;
   padding: 0;
 }

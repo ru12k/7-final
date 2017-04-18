@@ -1,8 +1,5 @@
 export default {
-  map: state => {
-    console.log('getters map: ', state.map);
-    return state.map;
-  },
+  map: state => state.map,
   layer: (state, getters) => {
     return id => {
       let findlayer = {};
@@ -12,16 +9,10 @@ export default {
       return findlayer;
     };
   },
-  layers: state =>  { 
-    console.log('getters layers: ', state.layers);
-    return state.layers;
-  },
-  countries: state => { 
-    console.log('getters countries: ', state.data);
-    return state.data;
-  },
+  layers: state => state.layers,
+  data: state => state.data,
   country: (state, getters) => { 
-    return id => getters.countries[id];
+    return id => getters.data[id];
   },
   getStateChanged: state => { 
     return id => { 
@@ -43,25 +34,15 @@ export default {
     const notVisitedID = keys.filter( id => !state.data[id].status);
     return notVisitedID.map( id => state.data[id]);
   },
-  authenticated: state => {
-    console.log('getter authenticated:', state.authenticated);
-    return state.authenticated;
-  },
-  userId: state => {
-    console.log('getter userId:', state.user.userId);
-    return state.user.userId;
-  },
+  authenticated: state => state.authenticated,
+  userId: state => state.user.userId,
   secretThing: state => state.secretThing,
   routes: ( state, getters ) => {
-    console.log('getter routes:');
     if ( getters.userProfile ) { 
       return `/private/${state.user.userProfile.nickname}`;
     }
     return '/public';
   },
-  userProfile: state => {
-    console.log('getter userProfile:', state.user.userProfile);
-    return state.user.userProfile;
-  },
-  loadLayers: state => state.load,
+  userProfile: state => state.user.userProfile,
+  load: state => state.load,
 };

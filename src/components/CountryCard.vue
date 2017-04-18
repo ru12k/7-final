@@ -17,7 +17,7 @@
 <script>
 import * as types from '../store/types.js';
 import css from '../config/layerStyle';
-import { fire } from '../store/userStore.js';
+import { fire } from '../store/store.js';
 import { mapGetters } from 'vuex';
 
 export default {

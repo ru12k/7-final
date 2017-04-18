@@ -14,7 +14,7 @@
 
     <div class="list-wrapper">
       <v-country id="country" 
-        v-for="country in countries" 
+        v-for="country in data" 
         :name="country.commonName" 
         :status="country.status" 
         :id="country.id" 
@@ -35,7 +35,7 @@ export default {
     'v-country': Country,
   },
   computed: {
-     ...mapGetters(['countries']),
+     ...mapGetters(['data']),
   },
 }
 

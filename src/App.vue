@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <!--<router-view></router-view>-->
     <v-map></v-map>
     <v-list></v-list>
     <v-visitedlist></v-visitedlist>
@@ -17,7 +16,6 @@ import semantic from '../node_modules/semantic-ui-css/semantic.min.js';
 import '../node_modules/semantic-ui-css/semantic.min.css';
 import '../node_modules/leaflet/dist/leaflet.css';
 import './main.css';
-// import { Auth } from './auth';
 import { fire, auth } from './store/store.js';
 import { mapMutations, mapGetters } from 'vuex';
 import Map from './components/Map';
@@ -25,7 +23,6 @@ import CountryList from './components/CountryList';
 import VisitedList from './components/VisitedList';
 import CountryCard from './components/CountryCard';
 import Menu from './components/Menu';
-
 import * as types from './store/types.js';
 
 export default {

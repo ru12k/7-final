@@ -50,26 +50,8 @@ export default {
   },
   methods: {
     ...mapMutations({ setAuth: types.SET_AUTH}),
-    // setAuth(value) {
-    //   this.$store.commit({ 
-    //     type: types.SET_AUTH,
-    //     authenticated: value,
-    //    });
-    //  },
     onClick() { this.map.setView(mapConfig.center, mapConfig.zoom) },
     login() { auth.login() },
-    // logout() {
-    //   const self = this;
-    //   localStorage.removeItem('id_token');
-    //   localStorage.removeItem('profile');
-    //   this.$store.commit({ 
-    //     type: types.SET_AUTH,
-    //     authenticated: false,
-    //      });
-    //   fire.fb.auth().signOut().then( 
-    //     () => console.log("Signout Successful"), 
-    //     error=> console.log(error));
-    // }
     logout() { 
       const self = this;
       auth.logout(self.setAuth) 

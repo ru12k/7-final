@@ -23,9 +23,8 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'CountryCard',
   computed: {
-    ...mapGetters(['map', 'layer', 'country', 'active', 'getStateChanged']),
+    ...mapGetters(['map', 'layer', 'country', 'active', ]),
     getCountry() { return this.country(this.active.id) },
-    newState() { return { [this.active.id]: this.getStateChanged(this.active.id)} },
     flag() {
       if (this.active.id) {
         return require(`../assets/flags/4x3/${this.active.id}.svg`);

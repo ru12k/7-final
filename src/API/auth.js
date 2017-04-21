@@ -1,3 +1,4 @@
+
 // import store from './store/store';
 // import * as types from './types';
 
@@ -29,11 +30,6 @@ export default class {
     this.lock = new Auth0Lock(auth0Config.clientId, auth0Config.domain, auth0Config.optionsLock);
     this.tokenOptions = tokenOptions;
   }
-  // static checkAuth() {
-  //   const jwt = localStorage.getItem('id_token');
-  //   if (jwt) return true;
-  //   return false;
-  // }
   login() { this.lock.show(); }
   logout(mutation) {
     const self = this;

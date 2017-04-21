@@ -11,7 +11,7 @@ export default {
   [types.ADD_MAP]: (state, payload) => state.map = payload.map,
   [types.ADD_LAYERS]: (state, payload) => state.layers = payload.layers,
   [types.INIT_DATA]: (state, payload) => state.data = payload.data,
-  [types.CHANGE_DATA]: (state, payload) => Vue.set(state.data, payload.id, payload.data),
+  [types.CHANGE_DATA]: (state, payload) => state.data[payload.id].status = payload.status ,
   [types.SET_ACTIVE]: (state, payload) => {
     state.active.init = true;
     state.active.id = payload.id;

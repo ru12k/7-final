@@ -5,7 +5,11 @@ import Vuex from 'vuex';
 import Fire from '../API/fire';
 import Auth from '../API/auth';
 import configFire from '../config/configFire';
-import { initUser, changeStatus, setActive, wathAuthenticated } from './plugins';
+import { 
+  initUser, 
+  changeStatus, 
+  setActive, 
+  wathAuthenticated } from './plugins';
 import mutations from './mutations';
 import actions from './actions';
 import getters from './getters';

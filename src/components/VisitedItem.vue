@@ -60,27 +60,4 @@ export default {
   margin: 5px;
   cursor: pointer;
 }
-/*
-
-
-#visitedItem-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    margin: 6px;
-    cursor: pointer;
-}
-#visitedItem-wrapper:hover {
-  font-size: 14px;
-}
-.visited-flag {
-  width: 15px;
-}
-.visited-name {
-  padding: 3px;
-  font-size: 12px;
-  color: orangered;
-}
-*/
 </style>

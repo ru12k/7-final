@@ -20,7 +20,7 @@ export const wathAuthenticated = store => {
             fire.fb.auth().signInWithCustomToken(result.id_token).catch( error => console.log("error.code:", error.code));          
             fire.fb.auth().onAuthStateChanged(user => {
               if (user) {
-                fire.ref = user.uid;
+                fire.userId = user.uid;
                 store.commit({
                   type: types.SET_USER,
                   userId: user.uid,
@@ -68,8 +68,9 @@ export const changeStatus = store => {
   store.subscribe((mutation, state) => {
     if (mutation.type === types.CHANGE_DATA) {
       const id = mutation.payload.id;
-      const state = mutation.payload.data;
-      if (state.status) store.getters.layer(id).setStyle({ fillColor: css.visited.fillColor }); 
+      const status = mutation.payload.status;
+      const state = store.getters.country(id);
+      if (state.status) store.getters.layer(id).setStyle({ fillColor: css.visited.fillColor });
       else store.getters.layer(id).setStyle({ fillColor: state.fillColor });
     }
   });

@@ -64,38 +64,38 @@ export default {
             commit({
               type: types.CHANGE_DATA,
               id,
-              data: val[id],
+              status: val[id].status,
             });
           }
         });
       });
-      const changeData = (data, id) => { 
-        commit({ type: types.CHANGE_DATA, id, data });
+      const changeData = (id, status) => { 
+        commit({ type: types.CHANGE_DATA, id, status });
       };
       fire.onChangeDatabase(changeData);
     } else {
       Object.keys(getters.data).forEach(id => {
         if (getters.data[id].status) {
-          const newState = rootGetters.getStateChanged(id);
+          const status = getters.changeStatus(id);
           commit({
             type: types.CHANGE_DATA,
             id,
-            data: newState,
+            status,
           });
         }
       });
     }
   },
 
-  [types.CHANGE_DATABASE]: ({ dispatch, commit, getters, rootGetters }, payload) => {
-    const newState = rootGetters.getStateChanged(payload.id);
-    if (rootGetters.userId) {
-      fire.changeDatabase({ [payload.id]: newState });
+  [types.CHANGE_DATABASE]: ({ dispatch, commit, getters }, payload) => {
+    const status = getters.changeStatus(payload.id);
+    if (getters.userId) {
+      fire.changeDatabase(payload.id);
     } else {
       commit({
         type: types.CHANGE_DATA,
         id: payload.id,
-        data: newState,
+        status,
       });
     }
   },

@@ -3,7 +3,7 @@ export default {
   layer: (state, getters) => {
     return id => {
       let findlayer = {};
-      getters.map.eachLayer(layer => {
+      getters.layers.eachLayer(layer => {
         if (layer.id === id) findlayer = layer;
       });
       return findlayer;
@@ -14,12 +14,10 @@ export default {
   country: (state, getters) => { 
     return id => getters.data[id];
   },
-  getStateChanged: state => { 
-    return id => { 
-      const data = state.data[id];
-      data.status = !data.status;
-      return data;
-    };
+  changeStatus: state => {
+    return id => {
+      return !state.data[id].status;
+    }
   },
   active: state => state.active,
   visitedCount: (state, getters) => getters.visited.length,

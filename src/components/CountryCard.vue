@@ -1,16 +1,22 @@
 <template>
-  <div id="card-wrapper" v-if="active.init" v-on:click="fitBounds">
-  <h5 class="custom-header"><i class="info circle icon"></i><span>Selected countries:</span></h5>
-  <div class="custom-content" v-bind:style="fillColor">
-    <div class="custom-text">
-      <h4 class="header" style="color: white" >{{getCountry.commonName}}</h4>
-      <div>{{ descriptionStatus}}</div>
+  <div id="card-wrapper" v-on:click="fitBounds">
+    <h5 class="custom-header"><i class="info circle icon"></i><span>Selected countries:</span></h5>
+    <div v-if="show">
+      <div class="custom-content" v-bind:style="fillColor">
+      <div class="custom-text">
+        <h4 class="header" style="color: white" >{{getCountry.commonName}}</h4>
+        <div>
+          {{descriptionStatus}}
+        </div>
+      </div>
+      <div class="custom-flag">
+        <img :src="flag"/>
+      </div>
     </div>
-    <div class="custom-flag">
-      <img :src="flag"/>
+    <div class="ui bottom attached button" v-on:click="changeStatus"><i class="add icon">
+      </i> {{buttonText}}
     </div>
   </div>
-  <div class="ui bottom attached button" v-on:click="changeStatus"><i class="add icon"></i> {{buttonText}} </div>
 </div>
 </template>
 
@@ -23,8 +29,18 @@ import { mapGetters } from 'vuex';
 export default {
   name: 'CountryCard',
   computed: {
-    ...mapGetters(['map', 'layer', 'country', 'active', ]),
-    getCountry() { return this.country(this.active.id) },
+    ...mapGetters(['map', 'layer', 'country', 'active', 'showCard' ]),
+    show() {
+        if (!this.showCard) {
+          return false;
+        } else {
+          return this.active.id;
+        }
+      },
+    getCountry() { 
+      if (this.active.id) return this.country(this.active.id);
+
+    },
     flag() {
       if (this.active.id) {
         return require(`../assets/flags/4x3/${this.active.id}.svg`);
@@ -77,6 +93,7 @@ export default {
     color: #fff;
     margin: auto;
     text-align: center;
+    width: 300px;
   }
   .custom-content {
     height: 100px;
@@ -112,6 +129,9 @@ export default {
   .custom-flag img {
     width: 70px;
   }
-
+  .empty-card {
+    height: 100px;
+    width: 300px;
+ }
 
 </style>

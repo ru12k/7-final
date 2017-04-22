@@ -1,8 +1,10 @@
 <template>
-  <a class="ui label" v-show="userId">
-    <img :src="ava" class="ui right spaced avatar image">
-    {{name}}
-  </a>
+  <div id="user-label">
+    <a class="ui small blue label" v-show="userId">
+      <img :src="ava" class="ui right spaced avatar image">
+      {{name}}
+    </a>
+  </div>
 </template>
 <script>
 import { mapGetters } from 'vuex';
@@ -25,5 +27,7 @@ export default {
   
 </script>
 <style lang="">
-  
+  #user-label {
+    margin: 0 5px 0 0;
+  }
 </style>

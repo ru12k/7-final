@@ -8,6 +8,7 @@ export const wathAuthenticated = store => {
     state => state.authenticated,
     () => { 
       if (store.state.authenticated === null) {
+        store.commit({type: types.SHOW_DEFAULT_UI });
         store.dispatch({ type: types.INIT_APP });
         console.log('wath authenticated === null:', store.getters.authenticated);
       }

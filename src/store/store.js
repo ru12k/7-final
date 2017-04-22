@@ -9,7 +9,10 @@ import {
   initUser, 
   changeStatus, 
   setActive, 
-  wathAuthenticated } from './plugins';
+  wathAuthenticated,
+  // setSearch,
+  // checkDisplay 
+} from './plugins';
 import mutations from './mutations';
 import actions from './actions';
 import getters from './getters';
@@ -26,16 +29,23 @@ const state = {
   layers: false,
   load: false,
   active: {
-    id: '',
+    id: false,
     value: false,
     init: false,
   },
+  search: false,
   secretThing: false,
   authenticated: null,
   user: {
     userId: false,
     userProfile: false,
   },
+  ui: {
+    showCountryList: true,
+    showCard: true,
+    showVisitedList: true,
+    showMessageBox: false, 
+  }
 };
 
 const store = new Vuex.Store({

@@ -14,6 +14,7 @@ export default {
         fillColor: defaultData[id].fillColor,
         status: defaultData[id].status,
         id,
+        display: 0,
       };
       data[id] = countryData;
       const style = {...css};
@@ -99,4 +100,5 @@ export default {
       });
     }
   },
+
 };

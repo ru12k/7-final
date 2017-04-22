@@ -3,7 +3,8 @@
   <div :class="[{visited: status}]" id="country"
     v-on:mouseover="hoverCountry(id)" 
     v-on:mouseout="leaveCountry(id)"
-    v-bind:style="dataHoverStyle">
+    v-bind:style="dataHoverStyle"
+    v-show= "setFilter">
     <div class="custom-flag">
       <img :src="flag">
     </div>
@@ -28,7 +29,7 @@
   let self = null;
     export default {
       name: 'listItem',
-      props: ['name', 'status', 'id', 'fillColor'],
+      props: ['name', 'status', 'id', 'fillColor', 'display', 'filter'],
       data() {
         self = this;
         return {
@@ -41,6 +42,15 @@
           if (this.id != '-99') {
             return require(`../assets/flags/4x3/${this.id}.svg`);
           }
+        },
+        checkDisplay() {
+          if (this.display > -1) return true;
+          return false;
+        },
+        setFilter() {
+          if (this.filter && this.status) return true;
+          if (this.filter && !this.status) return false;
+          if (!this.filter) return this.checkDisplay;
         },
       },
     methods: {

@@ -1,25 +1,25 @@
 <template>
   <div class="wrapper">
     <h5 class="custom-header"><i class="flag icon"></i><span>All countries:</span></h5>
-    <div class="list-tool">
-      <div class="ui icon input custom-tool">
-        <input type="text" placeholder="Search...">
-        <i class="search link icon"></i>
+    <div class="wrapper-list-contetnt" v-show="showCountryList">
+      <div class="list-tool">
+        <v-search></v-search>
+        <div class="ui small primary icon buttons">
+          <button class="ui button" v-on:click="offFilter()"><i class="list layout icon"></i></button>
+          <button class="ui button" v-on:click="setFilter()"><i class="check circle outline icon"></i></button>
+        </div>
       </div>
-      <div class="ui small primary icon buttons">
-        <button class="ui button"><i class="list layout icon"></i></button>
-        <button class="ui button"><i class="check circle outline icon"></i></button>
+      <div class="list-wrapper">
+        <v-country id="country" 
+          v-for="country in data"
+          :filter="filter"
+          :name="country.commonName"
+          :status="country.status" 
+          :id="country.id"
+          :display="country.display"
+          :fillColor="country.fillColor">
+        </v-country>
       </div>
-    </div>
-
-    <div class="list-wrapper">
-      <v-country id="country" 
-        v-for="country in data" 
-        :name="country.commonName" 
-        :status="country.status" 
-        :id="country.id" 
-        :fillColor="country.fillColor">
-      </v-country>
     </div>
   </div>
 </template>
@@ -27,15 +27,30 @@
 <script>
 import * as types from '../store/types.js';
 import Country from './CountryItem';
+import Search from './Search';
 import { mapGetters } from 'vuex';
 
 export default {
   name: 'CountryList',
   components: {
     'v-country': Country,
+    'v-search': Search
+  },
+  data() {
+    return {
+      filter: false,
+    }
   },
   computed: {
-     ...mapGetters(['data']),
+     ...mapGetters(['data', 'showCountryList']),
+  },
+  methods: {
+    setFilter() {
+      this.filter = true;
+    },
+    offFilter() {
+      this.filter = false;
+    },
   },
 }
 
@@ -63,6 +78,7 @@ export default {
     color: #fff;
     margin: auto;
     text-align: center;
+    width: 300px;
   }
   .list-tool {
     padding: 5px;

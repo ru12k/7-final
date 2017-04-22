@@ -14,6 +14,11 @@ export default {
   country: (state, getters) => { 
     return id => getters.data[id];
   },
+  // countyNames: state => {
+  //   const arr = [];
+  //   Object.keys(state.data).forEach(country => arr.push(country.commonName));
+  //   return arr;
+  // },
   changeStatus: state => {
     return id => {
       return !state.data[id].status;
@@ -43,4 +48,9 @@ export default {
   },
   userProfile: state => state.user.userProfile,
   load: state => state.load,
+  search: state => state.search,
+  showCountryList: state => state.ui.showCountryList,
+  showCard: state => state.ui.showCard,
+  showVisitedList: state => state.ui.showVisitedList,
+  showMessageBox: state => state.ui.showMessageBoxt,
 };

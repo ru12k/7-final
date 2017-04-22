@@ -1,7 +1,7 @@
 <template>
-  <div class="wrapper" v-if="init">
+  <div class="wrapper">
     <h5 class="custom-header"><i class="bookmark icon"></i><span>Visited countries:</span></h5>
-    <div class="visitedblock">
+    <div class="visitedblock" v-if="show">
         <v-visiteditem v-for="countryItem in isVisited" :name="countryItem.commonName" :id="countryItem.id"></v-visiteditem>
     </div>
   </div>
@@ -9,6 +9,7 @@
 
 <script>
 import  VisitedItem from './VisitedItem';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'visitedList',
@@ -16,11 +17,16 @@ export default {
     'v-visiteditem': VisitedItem
   },
   computed: {
+    ...mapGetters(['showVisitedList']),
       init() { 
         if (this.isVisited.length > 0) return true;
         return false;
       },
       isVisited() {  return this.$store.getters.visited },
+      show() {
+        if (!this.showVisitedList) return false;
+        return this.init;
+      },
     },
   }
 </script>
@@ -35,7 +41,6 @@ export default {
     box-shadow: 0 0 15px rgba(0,0,0,0.3);
     border-radius: 5px;
     background-color: rgba(230, 230, 230, 0.7);
-    padding-bottom: 5px;
     
 }
 .visitedblock{
@@ -52,9 +57,9 @@ export default {
   }
   .custom-header {
     background-color: #2185D0;
+    width: 300px;
     color: #fff;
     margin: auto;
-    margin-bottom: 5px;
     text-align: center;
   }
 </style>

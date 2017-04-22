@@ -5,6 +5,7 @@
 import L from '../../node_modules/leaflet/dist/leaflet.js';
 import mapConfig from '../config/mapConfig.js';
 import * as types from '../store/types.js';
+import css from '../config/layerStyle';
 import { mapMutations, mapGetters } from 'vuex';
 
 let self = null;
@@ -16,7 +17,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['load', 'layers', 'map']),
+    ...mapGetters(['load', 'layers', 'map', 'data', 'search']),
   },
   methods: {
     ...mapMutations({ addMap: types.ADD_MAP }),

@@ -5,5 +5,5 @@ export default {
   id: 'alexrd.2o2pfnn2',
   maxZoom: 18,
   zoom: 2,
-  center: [51.505, -0.09]
+  center: [14,38, -0.09]
 }

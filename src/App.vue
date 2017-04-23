@@ -35,7 +35,7 @@ export default {
     'v-menu': Menu,
   },
   computed: {
-    ...mapGetters(['authenticated']),
+    ...mapGetters(['authenticated', 'userId', 'routes', 'userProfile']),
   },
   methods: {
     ...mapMutations({ setAuth: types.SET_AUTH }),
@@ -43,6 +43,24 @@ export default {
   mounted() {
     const self = this;
     auth.authListener(self.setAuth);
+    this.$store.watch( 
+      state => {
+        if (state.user.userProfile) {
+          return `/private/${state.user.userProfile.nickname}`;
+        }
+        return '/public';
+      },
+      function () {
+        const state = { };
+        const title = '';
+        let url;
+        if (self.userProfile) {
+          url = `/private/username:${self.userProfile.nickname}`;
+        }
+        window.history.pushState(state, title, url);
+      },
+      {immediate: true}
+    );
   },
 };
 </script>
